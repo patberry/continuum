@@ -1,11 +1,9 @@
-// app/dashboard/brands/page.js
+// app/dashboard/brands/page.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAuth } from '@clerk/nextjs'
 
 export default function BrandsPage() {
-  const { userId, isLoaded } = useAuth()
   const [brands, setBrands] = useState([])
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
@@ -18,10 +16,8 @@ export default function BrandsPage() {
 
   // Fetch brands on mount
   useEffect(() => {
-    if (isLoaded && userId) {
-      fetchBrands()
-    }
-  }, [isLoaded, userId])
+    fetchBrands()
+  }, [])
 
   async function fetchBrands() {
     try {
@@ -40,39 +36,52 @@ export default function BrandsPage() {
     }
   }
 
-  async function createBrand(e) {
+  async function createBrand(e: React.FormEvent) {
     e.preventDefault()
+    
+    // Client-side validation
+    const trimmedName = brandName.trim()
+    if (!trimmedName) {
+      setError('Brand name is required')
+      return
+    }
+    
     setCreating(true)
     setError('')
 
     try {
+      console.log('Sending brand data:', { brand_name: trimmedName, brand_description: brandDescription })
+      
       const response = await fetch('/api/brands', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          brand_name: brandName,
-          brand_description: brandDescription
+          brand_name: trimmedName,
+          brand_description: brandDescription.trim()
         })
       })
 
       const data = await response.json()
+      console.log('API response:', data)
 
       if (response.ok) {
         setBrands([data.brand, ...brands])
         setBrandName('')
         setBrandDescription('')
         setShowForm(false)
+        setError('')
       } else {
         setError(data.error || 'Failed to create brand')
       }
     } catch (err) {
+      console.error('Create brand error:', err)
       setError('Failed to create brand')
     } finally {
       setCreating(false)
     }
   }
 
-  async function deleteBrand(brandId) {
+  async function deleteBrand(brandId: string) {
     if (!confirm('Delete this brand? All sessions, prompts, and intelligence will be permanently removed.')) {
       return
     }
@@ -93,7 +102,7 @@ export default function BrandsPage() {
     }
   }
 
-  if (!isLoaded || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 p-8">
         <div className="max-w-4xl mx-auto">
@@ -144,9 +153,9 @@ export default function BrandsPage() {
                 type="text"
                 value={brandName}
                 onChange={(e) => setBrandName(e.target.value)}
-                placeholder="e.g., Porsche, Tesla, Nike"
-                className="w-full px-4 py-2 border border-gray-300 rounded"
-                required
+                placeholder="e.g., Porsche, Tesla, Nike, Sub-Zero"
+                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-black"
+                autoComplete="off"
               />
             </div>
 
@@ -158,15 +167,15 @@ export default function BrandsPage() {
                 value={brandDescription}
                 onChange={(e) => setBrandDescription(e.target.value)}
                 placeholder="Notes about this brand..."
-                className="w-full px-4 py-2 border border-gray-300 rounded h-24"
+                className="w-full px-4 py-2 border border-gray-300 rounded h-24 focus:outline-none focus:border-black"
               />
             </div>
 
             <div className="flex gap-3">
               <button
                 type="submit"
-                disabled={creating}
-                className="bg-black text-white px-6 py-2 rounded font-semibold hover:bg-gray-800 disabled:bg-gray-400"
+                disabled={creating || !brandName.trim()}
+                className="bg-black text-white px-6 py-2 rounded font-semibold hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {creating ? 'Creating...' : 'Create Brand'}
               </button>
