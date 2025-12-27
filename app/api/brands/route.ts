@@ -1,139 +1,173 @@
-// app/dashboard/brands/page.tsx
-'use client'
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
+import { createClient } from '@supabase/supabase-js';
 
-import { useState, useEffect } from 'react'
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
-export default function BrandsPage() {
-  const [brands, setBrands] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [creating, setCreating] = useState(false)
-  const [showForm, setShowForm] = useState(false)
-  
-  // Form state
-  const [brandName, setBrandName] = useState('')
-  const [brandDescription, setBrandDescription] = useState('')
-  const [error, setError] = useState('')
-
-  // Fetch brands on mount
-  useEffect(() => {
-    fetchBrands()
-  }, [])
-
-  async function fetchBrands() {
-    try {
-      const response = await fetch('/api/brands')
-      const data = await response.json()
-      
-      if (response.ok) {
-        setBrands(data.brands || [])
-      } else {
-        setError(data.error || 'Failed to fetch brands')
-      }
-    } catch (err) {
-      setError('Failed to load brands')
-    } finally {
-      setLoading(false)
+// GET - List all brands for authenticated user
+export async function GET(req: NextRequest) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+
+    const { data: brands, error } = await supabase
+      .from('brand_profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Failed to fetch brands:', error);
+      return NextResponse.json({ error: 'Failed to fetch brands' }, { status: 500 });
+    }
+
+    return NextResponse.json({ brands });
+  } catch (error) {
+    console.error('Brands GET error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
+}
 
-  async function createBrand(e: React.FormEvent) {
-    e.preventDefault()
-    
-    // Client-side validation
-    const trimmedName = brandName.trim()
-    if (!trimmedName) {
-      setError('Brand name is required')
-      return
+// POST - Create a new brand
+export async function POST(req: NextRequest) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
-    setCreating(true)
-    setError('')
 
-    try {
-      console.log('Sending brand data:', { name: trimmedName, description: brandDescription })
-      
-      const response = await fetch('/api/brands', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: trimmedName,
-          description: brandDescription.trim()
-        })
+    const body = await req.json();
+    const { name, description, guidelines } = body;
+
+    if (!name || name.trim() === '') {
+      return NextResponse.json({ error: 'Brand name is required' }, { status: 400 });
+    }
+
+    const { data: brand, error } = await supabase
+      .from('brand_profiles')
+      .insert({
+        user_id: userId,
+        brand_name: name.trim(),
+        brand_description: description?.trim() || null,
+        brand_guidelines: guidelines || null,
       })
+      .select()
+      .single();
 
-      const data = await response.json()
-      console.log('API response:', data)
-
-      if (response.ok) {
-        setBrands([data.brand, ...brands])
-        setBrandName('')
-        setBrandDescription('')
-        setShowForm(false)
-        setError('')
-      } else {
-        setError(data.error || 'Failed to create brand')
-      }
-    } catch (err) {
-      console.error('Create brand error:', err)
-      setError('Failed to create brand')
-    } finally {
-      setCreating(false)
+    if (error) {
+      console.error('Failed to create brand:', error);
+      return NextResponse.json({ error: 'Failed to create brand' }, { status: 500 });
     }
+
+    return NextResponse.json({ brand }, { status: 201 });
+  } catch (error) {
+    console.error('Brands POST error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
+}
 
-  async function deleteBrand(brandId: string) {
-    if (!confirm('Delete this brand? All sessions, prompts, and intelligence will be permanently removed.')) {
-      return
+// PUT - Update a brand
+export async function PUT(req: NextRequest) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    try {
-      const response = await fetch(`/api/brands?id=${brandId}`, {
-        method: 'DELETE'
+    const body = await req.json();
+    const { id, name, description, guidelines } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: 'Brand ID is required' }, { status: 400 });
+    }
+
+    if (!name || name.trim() === '') {
+      return NextResponse.json({ error: 'Brand name is required' }, { status: 400 });
+    }
+
+    // Verify ownership
+    const { data: existing, error: fetchError } = await supabase
+      .from('brand_profiles')
+      .select('brand_id')
+      .eq('brand_id', id)
+      .eq('user_id', userId)
+      .single();
+
+    if (fetchError || !existing) {
+      return NextResponse.json({ error: 'Brand not found' }, { status: 404 });
+    }
+
+    const { data: brand, error } = await supabase
+      .from('brand_profiles')
+      .update({
+        brand_name: name.trim(),
+        brand_description: description?.trim() || null,
+        brand_guidelines: guidelines || null,
+        updated_at: new Date().toISOString(),
       })
+      .eq('brand_id', id)
+      .eq('user_id', userId)
+      .select()
+      .single();
 
-      if (response.ok) {
-        setBrands(brands.filter(b => b.brand_id !== brandId))
-      } else {
-        const data = await response.json()
-        alert(data.error || 'Failed to delete brand')
-      }
-    } catch (err) {
-      alert('Failed to delete brand')
+    if (error) {
+      console.error('Failed to update brand:', error);
+      return NextResponse.json({ error: 'Failed to update brand' }, { status: 500 });
     }
+
+    return NextResponse.json({ brand });
+  } catch (error) {
+    console.error('Brands PUT error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
+}
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 p-8">
-        <div className="max-w-4xl mx-auto">
-          <p className="text-gray-600">Loading brands...</p>
-        </div>
-      </div>
-    )
+// DELETE - Delete a brand
+export async function DELETE(req: NextRequest) {
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'Brand ID is required' }, { status: 400 });
+    }
+
+    // Verify ownership before deleting
+    const { data: existing, error: fetchError } = await supabase
+      .from('brand_profiles')
+      .select('brand_id')
+      .eq('brand_id', id)
+      .eq('user_id', userId)
+      .single();
+
+    if (fetchError || !existing) {
+      return NextResponse.json({ error: 'Brand not found' }, { status: 404 });
+    }
+
+    const { error } = await supabase
+      .from('brand_profiles')
+      .delete()
+      .eq('brand_id', id)
+      .eq('user_id', userId);
+
+    if (error) {
+      console.error('Failed to delete brand:', error);
+      return NextResponse.json({ error: 'Failed to delete brand' }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Brands DELETE error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-
-  return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Your Brand Profiles</h1>
-          <p className="text-gray-600">
-            Each brand is completely isolated. Porsche intelligence never touches Tesla data.
-          </p>
-        </div>
-
-        {/* Error message */}
-        {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded">
-            {error}
-          </div>
-        )}
-
-        {/* Create button */}
-        {!showForm && (
-          <button
-            onClick={() => setShowForm(true)}
-            className="mb-6 bg-black text-white px-6 py-3 rounded font-semibold hover:bg-gray-800"
-          >
-            + C
+}

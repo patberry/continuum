@@ -56,9 +56,9 @@ export default function BrandsPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          brand_name: trimmedName,
-          brand_description: brandDescription.trim()
-        })
+  		name: trimmedName,
+  		description: brandDescription.trim()
+		})
       })
 
       const data = await response.json()
