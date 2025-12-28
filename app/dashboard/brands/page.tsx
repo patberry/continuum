@@ -56,7 +56,7 @@ export default function BrandsPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-  		name: trimmedName,
+  		name: trimmedName, 
   		description: brandDescription.trim()
 		})
       })
