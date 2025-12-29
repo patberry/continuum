@@ -2,6 +2,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { UserButton } from '@clerk/nextjs'
 
 export default function BrandsPage() {
   const [brands, setBrands] = useState([])
@@ -104,7 +105,7 @@ export default function BrandsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black p-8">
+      <div className="min-h-screen bg-black text-white p-8">
         <div className="max-w-4xl mx-auto">
           <p className="text-gray-400">Loading brands...</p>
         </div>
@@ -115,17 +116,28 @@ export default function BrandsPage() {
   return (
     <div className="min-h-screen bg-black text-white p-8">
       <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-green-500 mb-2">Your Brand Profiles</h1>
-          <p className="text-gray-400">
-            Each brand is completely isolated. Porsche intelligence never touches Tesla data.
+        
+        {/* Header with UserButton - MATCHING GENERATE PAGE */}
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-4xl font-bold mb-2" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00FF87' }}>
+              CONTINUUM
+            </h1>
+            <p className="text-white">Brand Intelligence Profiles</p>
+          </div>
+          <UserButton afterSignOutUrl="/" />
+        </div>
+
+        {/* Subtitle / Explanation */}
+        <div className="mb-8 bg-gray-900 border border-gray-800 p-4 rounded">
+          <p className="text-gray-300 text-sm">
+            Each brand is completely isolated. <span className="text-[#00FF87]">Porsche intelligence never touches Tesla data.</span>
           </p>
         </div>
 
         {/* Error message */}
         {error && (
-          <div className="mb-6 bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded">
+          <div className="mb-6 bg-red-900 border border-red-700 text-red-200 p-4 rounded">
             {error}
           </div>
         )}
@@ -134,16 +146,19 @@ export default function BrandsPage() {
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="mb-6 bg-green-600 text-white px-6 py-3 rounded font-semibold hover:bg-green-700"
+            className="mb-6 bg-[#00FF87] text-black font-bold px-6 py-3 rounded hover:bg-[#00DD75] transition-colors"
+            style={{ fontFamily: 'JetBrains Mono, monospace' }}
           >
-            + Create New Brand
+            + CREATE NEW BRAND
           </button>
         )}
 
         {/* Create form */}
         {showForm && (
-          <form onSubmit={createBrand} className="mb-8 bg-gray-900 border border-gray-700 p-6 rounded-lg">
-            <h2 className="text-xl font-bold mb-4 text-white">Create New Brand</h2>
+          <form onSubmit={createBrand} className="mb-8 bg-gray-900 border border-gray-700 p-6 rounded">
+            <h2 className="text-xl font-bold mb-4 text-white" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+              Create New Brand
+            </h2>
             
             <div className="mb-4">
               <label className="block text-sm font-semibold mb-2 text-gray-300">
@@ -154,7 +169,7 @@ export default function BrandsPage() {
                 value={brandName}
                 onChange={(e) => setBrandName(e.target.value)}
                 placeholder="e.g., Porsche, Tesla, Nike, Sub-Zero"
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500"
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded text-white placeholder-gray-500 focus:outline-none focus:border-[#00FF87]"
                 autoComplete="off"
               />
             </div>
@@ -167,7 +182,7 @@ export default function BrandsPage() {
                 value={brandDescription}
                 onChange={(e) => setBrandDescription(e.target.value)}
                 placeholder="Notes about this brand..."
-                className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded h-24 text-white placeholder-gray-500 focus:outline-none focus:border-green-500"
+                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded h-24 text-white placeholder-gray-500 focus:outline-none focus:border-[#00FF87] resize-none"
               />
             </div>
 
@@ -175,9 +190,10 @@ export default function BrandsPage() {
               <button
                 type="submit"
                 disabled={creating || !brandName.trim()}
-                className="bg-green-600 text-white px-6 py-2 rounded font-semibold hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed"
+                className="bg-[#00FF87] text-black font-bold px-6 py-3 rounded hover:bg-[#00DD75] disabled:bg-gray-700 disabled:text-gray-500 transition-colors"
+                style={{ fontFamily: 'JetBrains Mono, monospace' }}
               >
-                {creating ? 'Creating...' : 'Create Brand'}
+                {creating ? 'CREATING...' : 'CREATE BRAND'}
               </button>
               <button
                 type="button"
@@ -187,7 +203,7 @@ export default function BrandsPage() {
                   setBrandDescription('')
                   setError('')
                 }}
-                className="px-6 py-2 border border-gray-600 text-gray-300 rounded font-semibold hover:bg-gray-800"
+                className="px-6 py-3 border border-gray-700 text-gray-300 rounded hover:bg-gray-800 transition-colors"
               >
                 Cancel
               </button>
@@ -198,17 +214,20 @@ export default function BrandsPage() {
         {/* Brand list */}
         <div className="space-y-4">
           {brands.length === 0 ? (
-            <div className="bg-gray-900 border border-gray-700 p-12 rounded-lg text-center">
-              <p className="text-gray-400 mb-4">No brands yet. Create your first brand to get started.</p>
+            <div className="bg-gray-900 border border-gray-700 p-12 rounded text-center">
+              <p className="text-gray-400 mb-2">No brands yet.</p>
+              <p className="text-gray-500 text-sm">Create your first brand to start building intelligence.</p>
             </div>
           ) : (
             brands.map(brand => (
-              <div key={brand.brand_id} className="bg-gray-900 border border-gray-700 p-6 rounded-lg">
+              <div key={brand.brand_id} className="bg-gray-900 border border-gray-700 p-6 rounded">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-bold text-white">{brand.brand_name}</h3>
-                      <span className="text-sm px-3 py-1 bg-green-900/50 text-green-400 rounded-full font-semibold">
+                      <h3 className="text-xl font-bold text-white" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                        {brand.brand_name}
+                      </h3>
+                      <span className="text-xs px-3 py-1 bg-[#00FF87]/10 text-[#00FF87] rounded border border-[#00FF87]/30 font-semibold" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
                         🔒 ISOLATED
                       </span>
                     </div>
@@ -223,13 +242,14 @@ export default function BrandsPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => window.location.href = `/generate?brand=${brand.brand_id}`}
-                      className="px-4 py-2 bg-green-600 text-white rounded font-semibold hover:bg-green-700"
+                      className="px-4 py-2 bg-[#00FF87] text-black font-bold rounded hover:bg-[#00DD75] transition-colors"
+                      style={{ fontFamily: 'JetBrains Mono, monospace' }}
                     >
-                      Generate
+                      GENERATE
                     </button>
                     <button
                       onClick={() => deleteBrand(brand.brand_id)}
-                      className="px-4 py-2 border border-red-700 text-red-400 rounded font-semibold hover:bg-red-900/30"
+                      className="px-4 py-2 border border-red-700 text-red-400 rounded hover:bg-red-900/30 transition-colors"
                     >
                       Delete
                     </button>
