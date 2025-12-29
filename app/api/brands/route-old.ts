@@ -49,12 +49,13 @@ export async function POST(req: NextRequest) {
     }
 
     const { data: brand, error } = await supabase
-  .from('brand_profiles')
-  .insert({
-    user_id: userId,
-    brand_name: name.trim(),
-    brand_description: description?.trim() || null,
-  })
+      .from('brand_profiles')
+      .insert({
+        user_id: userId,
+        brand_name: name.trim(),
+        brand_description: description?.trim() || null,
+        brand_guidelines: guidelines || null,
+      })
       .select()
       .single();
 
