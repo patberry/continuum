@@ -56,9 +56,9 @@ export default function BrandsPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-  		name: trimmedName, 
-  		description: brandDescription.trim()
-		})
+          name: trimmedName, 
+          description: brandDescription.trim()
+        })
       })
 
       const data = await response.json()
@@ -104,28 +104,28 @@ export default function BrandsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-8">
+      <div className="min-h-screen bg-black p-8">
         <div className="max-w-4xl mx-auto">
-          <p className="text-gray-600">Loading brands...</p>
+          <p className="text-gray-400">Loading brands...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-black text-white p-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Your Brand Profiles</h1>
-          <p className="text-gray-600">
+          <h1 className="text-3xl font-bold text-green-500 mb-2">Your Brand Profiles</h1>
+          <p className="text-gray-400">
             Each brand is completely isolated. Porsche intelligence never touches Tesla data.
           </p>
         </div>
 
         {/* Error message */}
         {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded">
+          <div className="mb-6 bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded">
             {error}
           </div>
         )}
@@ -134,7 +134,7 @@ export default function BrandsPage() {
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className="mb-6 bg-black text-white px-6 py-3 rounded font-semibold hover:bg-gray-800"
+            className="mb-6 bg-green-600 text-white px-6 py-3 rounded font-semibold hover:bg-green-700"
           >
             + Create New Brand
           </button>
@@ -142,11 +142,11 @@ export default function BrandsPage() {
 
         {/* Create form */}
         {showForm && (
-          <form onSubmit={createBrand} className="mb-8 bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-bold mb-4">Create New Brand</h2>
+          <form onSubmit={createBrand} className="mb-8 bg-gray-900 border border-gray-700 p-6 rounded-lg">
+            <h2 className="text-xl font-bold mb-4 text-white">Create New Brand</h2>
             
             <div className="mb-4">
-              <label className="block text-sm font-semibold mb-2">
+              <label className="block text-sm font-semibold mb-2 text-gray-300">
                 Brand Name *
               </label>
               <input
@@ -154,20 +154,20 @@ export default function BrandsPage() {
                 value={brandName}
                 onChange={(e) => setBrandName(e.target.value)}
                 placeholder="e.g., Porsche, Tesla, Nike, Sub-Zero"
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-black"
+                className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded text-white placeholder-gray-500 focus:outline-none focus:border-green-500"
                 autoComplete="off"
               />
             </div>
 
             <div className="mb-6">
-              <label className="block text-sm font-semibold mb-2">
+              <label className="block text-sm font-semibold mb-2 text-gray-300">
                 Description (optional)
               </label>
               <textarea
                 value={brandDescription}
                 onChange={(e) => setBrandDescription(e.target.value)}
                 placeholder="Notes about this brand..."
-                className="w-full px-4 py-2 border border-gray-300 rounded h-24 focus:outline-none focus:border-black"
+                className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded h-24 text-white placeholder-gray-500 focus:outline-none focus:border-green-500"
               />
             </div>
 
@@ -175,7 +175,7 @@ export default function BrandsPage() {
               <button
                 type="submit"
                 disabled={creating || !brandName.trim()}
-                className="bg-black text-white px-6 py-2 rounded font-semibold hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="bg-green-600 text-white px-6 py-2 rounded font-semibold hover:bg-green-700 disabled:bg-gray-600 disabled:cursor-not-allowed"
               >
                 {creating ? 'Creating...' : 'Create Brand'}
               </button>
@@ -187,7 +187,7 @@ export default function BrandsPage() {
                   setBrandDescription('')
                   setError('')
                 }}
-                className="px-6 py-2 border border-gray-300 rounded font-semibold hover:bg-gray-50"
+                className="px-6 py-2 border border-gray-600 text-gray-300 rounded font-semibold hover:bg-gray-800"
               >
                 Cancel
               </button>
@@ -198,22 +198,22 @@ export default function BrandsPage() {
         {/* Brand list */}
         <div className="space-y-4">
           {brands.length === 0 ? (
-            <div className="bg-white p-12 rounded-lg shadow text-center">
-              <p className="text-gray-600 mb-4">No brands yet. Create your first brand to get started.</p>
+            <div className="bg-gray-900 border border-gray-700 p-12 rounded-lg text-center">
+              <p className="text-gray-400 mb-4">No brands yet. Create your first brand to get started.</p>
             </div>
           ) : (
             brands.map(brand => (
-              <div key={brand.brand_id} className="bg-white p-6 rounded-lg shadow">
+              <div key={brand.brand_id} className="bg-gray-900 border border-gray-700 p-6 rounded-lg">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-bold">{brand.brand_name}</h3>
-                      <span className="text-sm px-3 py-1 bg-green-100 text-green-800 rounded-full font-semibold">
+                      <h3 className="text-xl font-bold text-white">{brand.brand_name}</h3>
+                      <span className="text-sm px-3 py-1 bg-green-900/50 text-green-400 rounded-full font-semibold">
                         🔒 ISOLATED
                       </span>
                     </div>
                     {brand.brand_description && (
-                      <p className="text-gray-600 mb-3">{brand.brand_description}</p>
+                      <p className="text-gray-400 mb-3">{brand.brand_description}</p>
                     )}
                     <p className="text-sm text-gray-500">
                       Created {new Date(brand.created_at).toLocaleDateString()}
@@ -223,13 +223,13 @@ export default function BrandsPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => window.location.href = `/generate?brand=${brand.brand_id}`}
-                      className="px-4 py-2 bg-black text-white rounded font-semibold hover:bg-gray-800"
+                      className="px-4 py-2 bg-green-600 text-white rounded font-semibold hover:bg-green-700"
                     >
                       Generate
                     </button>
                     <button
                       onClick={() => deleteBrand(brand.brand_id)}
-                      className="px-4 py-2 border border-red-300 text-red-600 rounded font-semibold hover:bg-red-50"
+                      className="px-4 py-2 border border-red-700 text-red-400 rounded font-semibold hover:bg-red-900/30"
                     >
                       Delete
                     </button>
