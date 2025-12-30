@@ -310,7 +310,7 @@ export default function GeneratePage() {
 
   return (
     <div className="min-h-screen bg-black text-white p-8">
-      <div className="max-width-6xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         
         {/* Header */}
         <div className="mb-8 flex justify-between items-center">
