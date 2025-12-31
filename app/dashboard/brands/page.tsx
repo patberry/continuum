@@ -237,7 +237,8 @@ export default function BrandsPage() {
             brands.map((brand: any) => (
               <div 
                 key={brand.brand_id} 
-                className="bg-gray-900 border border-gray-700 p-6 rounded hover:border-[#00FF87] transition-colors"
+                onClick={() => window.location.href = '/generate'}
+                className="bg-gray-900 border border-gray-700 p-6 rounded hover:border-[#00FF87] transition-colors cursor-pointer"
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
@@ -258,7 +259,10 @@ export default function BrandsPage() {
                   </div>
                   
                   <button
-                    onClick={() => deleteBrand(brand.brand_id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteBrand(brand.brand_id);
+                    }}
                     className="ml-4 text-red-500 hover:text-red-400 text-sm font-bold"
                     style={{ fontFamily: 'JetBrains Mono, monospace' }}
                   >
