@@ -49,33 +49,29 @@ export default function BrandsPage() {
     
     setCreating(true)
     setError('')
-
+    
     try {
-      console.log('Sending brand data:', { brand_name: trimmedName, brand_description: brandDescription })
-      
       const response = await fetch('/api/brands', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: trimmedName, 
+          name: trimmedName,
           description: brandDescription.trim()
         })
       })
-
+      
       const data = await response.json()
-      console.log('API response:', data)
-
+      
       if (response.ok) {
-        setBrands([data.brand, ...brands])
+        // Success - refresh list
+        fetchBrands()
         setBrandName('')
         setBrandDescription('')
         setShowForm(false)
-        setError('')
       } else {
         setError(data.error || 'Failed to create brand')
       }
     } catch (err) {
-      console.error('Create brand error:', err)
       setError('Failed to create brand')
     } finally {
       setCreating(false)
@@ -83,17 +79,17 @@ export default function BrandsPage() {
   }
 
   async function deleteBrand(brandId: string) {
-    if (!confirm('Delete this brand? All sessions, prompts, and intelligence will be permanently removed.')) {
+    if (!confirm('Are you sure you want to delete this brand?')) {
       return
     }
-
+    
     try {
       const response = await fetch(`/api/brands/${brandId}`, {
         method: 'DELETE'
       })
-
+      
       if (response.ok) {
-        setBrands(brands.filter(b => b.brand_id !== brandId))
+        fetchBrands()
       } else {
         const data = await response.json()
         alert(data.error || 'Failed to delete brand')
@@ -117,15 +113,26 @@ export default function BrandsPage() {
     <div className="min-h-screen bg-black text-white p-8">
       <div className="max-w-4xl mx-auto">
         
-        {/* Header with UserButton - MATCHING GENERATE PAGE */}
+        {/* Header with Logo - MATCHING GENERATE PAGE */}
         <div className="mb-8 flex justify-between items-center">
-          <div>
-            <h1 className="text-4xl font-bold mb-2" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00FF87' }}>
-              CONTINUUM
-            </h1>
-            <p className="text-white">Brand Intelligence Profiles</p>
+          <div className="flex items-center gap-4">
+            <a href="/generate">
+              <img 
+                src="/continuum-logo.png" 
+                alt="Continuum" 
+                className="h-12 cursor-pointer hover:opacity-80 transition-opacity"
+              />
+            </a>
           </div>
-          <UserButton afterSignOutUrl="/" />
+          <div className="flex items-center gap-4">
+            <a href="/generate" className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors">
+              Generate
+            </a>
+            <a href="/about" className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors">
+              About
+            </a>
+            <UserButton afterSignOutUrl="/" />
+          </div>
         </div>
 
         {/* Subtitle / Explanation */}
@@ -155,110 +162,114 @@ export default function BrandsPage() {
 
         {/* Create form */}
         {showForm && (
-          <form onSubmit={createBrand} className="mb-8 bg-gray-900 border border-gray-700 p-6 rounded">
-            <h2 className="text-xl font-bold mb-4 text-white" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+          <div className="mb-8 bg-gray-900 border border-gray-700 p-6 rounded">
+            <h2 className="text-xl font-bold mb-4" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00FF87' }}>
               Create New Brand
             </h2>
             
-            <div className="mb-4">
-              <label className="block text-sm font-semibold mb-2 text-gray-300">
-                Brand Name *
-              </label>
-              <input
-                type="text"
-                value={brandName}
-                onChange={(e) => setBrandName(e.target.value)}
-                placeholder="e.g., Porsche, Tesla, Nike, Sub-Zero"
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded text-white placeholder-gray-500 focus:outline-none focus:border-[#00FF87]"
-                autoComplete="off"
-              />
-            </div>
-
-            <div className="mb-6">
-              <label className="block text-sm font-semibold mb-2 text-gray-300">
-                Description (optional)
-              </label>
-              <textarea
-                value={brandDescription}
-                onChange={(e) => setBrandDescription(e.target.value)}
-                placeholder="Notes about this brand..."
-                className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded h-24 text-white placeholder-gray-500 focus:outline-none focus:border-[#00FF87] resize-none"
-              />
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                type="submit"
-                disabled={creating || !brandName.trim()}
-                className="bg-[#00FF87] text-black font-bold px-6 py-3 rounded hover:bg-[#00DD75] disabled:bg-gray-700 disabled:text-gray-500 transition-colors"
-                style={{ fontFamily: 'JetBrains Mono, monospace' }}
-              >
-                {creating ? 'CREATING...' : 'CREATE BRAND'}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowForm(false)
-                  setBrandName('')
-                  setBrandDescription('')
-                  setError('')
-                }}
-                className="px-6 py-3 border border-gray-700 text-gray-300 rounded hover:bg-gray-800 transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
+            <form onSubmit={createBrand} className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold mb-2 uppercase text-gray-400" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                  Brand Name *
+                </label>
+                <input
+                  type="text"
+                  value={brandName}
+                  onChange={(e) => setBrandName(e.target.value)}
+                  className="w-full bg-gray-800 text-white p-3 rounded border border-gray-700 focus:border-[#00FF87] focus:outline-none"
+                  placeholder="e.g. Porsche, Nike, Sub-Zero"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-bold mb-2 uppercase text-gray-400" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                  Brand Description (Optional)
+                </label>
+                <textarea
+                  value={brandDescription}
+                  onChange={(e) => setBrandDescription(e.target.value)}
+                  className="w-full bg-gray-800 text-white p-3 rounded border border-gray-700 focus:border-[#00FF87] focus:outline-none"
+                  placeholder="Brief description, key attributes, or notes about this brand..."
+                  rows={3}
+                />
+              </div>
+              
+              <div className="flex gap-3">
+                <button
+                  type="submit"
+                  disabled={creating}
+                  className={`flex-1 py-3 rounded font-bold transition-colors ${
+                    creating 
+                      ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
+                      : 'bg-[#00FF87] text-black hover:bg-[#00DD75]'
+                  }`}
+                  style={{ fontFamily: 'JetBrains Mono, monospace' }}
+                >
+                  {creating ? 'CREATING...' : 'CREATE BRAND'}
+                </button>
+                
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowForm(false)
+                    setBrandName('')
+                    setBrandDescription('')
+                    setError('')
+                  }}
+                  className="px-6 py-3 rounded font-bold bg-gray-700 text-white hover:bg-gray-600 transition-colors"
+                  style={{ fontFamily: 'JetBrains Mono, monospace' }}
+                >
+                  CANCEL
+                </button>
+              </div>
+            </form>
+          </div>
         )}
 
-        {/* Brand list */}
+        {/* Brands list */}
         <div className="space-y-4">
           {brands.length === 0 ? (
-            <div className="bg-gray-900 border border-gray-700 p-12 rounded text-center">
-              <p className="text-gray-400 mb-2">No brands yet.</p>
-              <p className="text-gray-500 text-sm">Create your first brand to start building intelligence.</p>
+            <div className="bg-gray-900 border border-gray-800 p-8 rounded text-center">
+              <p className="text-gray-400">No brands yet. Create your first brand profile to get started.</p>
             </div>
           ) : (
-            brands.map(brand => (
-              <div key={brand.brand_id} className="bg-gray-900 border border-gray-700 p-6 rounded">
-                <div className="flex items-start justify-between">
+            brands.map((brand: any) => (
+              <div 
+                key={brand.brand_id} 
+                className="bg-gray-900 border border-gray-700 p-6 rounded hover:border-[#00FF87] transition-colors"
+              >
+                <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-xl font-bold text-white" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+                      <span className="text-xl">🔒</span>
+                      <h3 className="text-2xl font-bold" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00FF87' }}>
                         {brand.brand_name}
                       </h3>
-                      <span className="text-xs px-3 py-1 bg-[#00FF87]/10 text-[#00FF87] rounded border border-[#00FF87]/30 font-semibold" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
-                        🔒 ISOLATED
-                      </span>
                     </div>
+                    
                     {brand.brand_description && (
-                      <p className="text-gray-400 mb-3">{brand.brand_description}</p>
+                      <p className="text-gray-400 text-sm mt-2">{brand.brand_description}</p>
                     )}
-                    <p className="text-sm text-gray-500">
-                      Created {new Date(brand.created_at).toLocaleDateString()}
-                    </p>
+                    
+                    <div className="mt-3 text-xs text-gray-500">
+                      Created: {new Date(brand.created_at).toLocaleDateString()}
+                    </div>
                   </div>
                   
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => window.location.href = `/generate?brand=${brand.brand_id}`}
-                      className="px-4 py-2 bg-[#00FF87] text-black font-bold rounded hover:bg-[#00DD75] transition-colors"
-                      style={{ fontFamily: 'JetBrains Mono, monospace' }}
-                    >
-                      GENERATE
-                    </button>
-                    <button
-                      onClick={() => deleteBrand(brand.brand_id)}
-                      className="px-4 py-2 border border-red-700 text-red-400 rounded hover:bg-red-900/30 transition-colors"
-                    >
-                      Delete
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => deleteBrand(brand.brand_id)}
+                    className="ml-4 text-red-500 hover:text-red-400 text-sm font-bold"
+                    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+                  >
+                    DELETE
+                  </button>
                 </div>
               </div>
             ))
           )}
         </div>
+
       </div>
     </div>
   )

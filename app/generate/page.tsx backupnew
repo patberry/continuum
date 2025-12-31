@@ -215,7 +215,7 @@ export default function GeneratePage() {
       setGeneratedPrompt(data.prompt);
       setLastGeneratedPrompt(data.prompt);
       setCredits(prev => prev - 10);
-      setSuccessMessage('Prompt generated! (10 tokens)');
+      setSuccessMessage('Prompt generated! (10 credits)');
 
     } catch (error: any) {
       console.error('Generation error:', error);
@@ -253,7 +253,7 @@ export default function GeneratePage() {
       setGeneratedPrompt(data.refinedPrompt);
       setLastGeneratedPrompt(data.refinedPrompt);
       setCredits(prev => prev - 2);
-      setSuccessMessage('Prompt refined! (2 tokens)');
+      setSuccessMessage('Prompt refined! (2 credits)');
 
     } catch (error) {
       console.error('Refinement error:', error);
@@ -314,19 +314,13 @@ export default function GeneratePage() {
         
         {/* Header */}
         <div className="mb-8 flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <a href="/dashboard/brands">
-              <img 
-                src="/continuum-logo.png" 
-                alt="Continuum" 
-                className="h-12 cursor-pointer hover:opacity-80 transition-opacity"
-              />
-            </a>
+          <div>
+            <h1 className="text-4xl font-bold mb-2" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00FF87' }}>
+              CONTINUUM
+            </h1>
+            <p className="text-gray-400">Generate Prompts</p>
           </div>
           <div className="flex items-center gap-4">
-            <a href="/dashboard/brands" className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors">
-              Brands
-            </a>
             <a href="/about" className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors">
               About
             </a>
@@ -336,16 +330,12 @@ export default function GeneratePage() {
 
         {/* Credits & Timer */}
         <div className="bg-gray-900 border border-gray-700 rounded p-6 mb-8 flex justify-between items-center">
-          <div className="flex items-center gap-3 group relative cursor-help">
-            <span className="text-3xl">⚡</span>
+          <div>
+            <span className="text-gray-400">Credits Available: </span>
             <span className="text-[#00FF87] text-3xl font-bold" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
               {credits}
             </span>
-            
-            {/* Tooltip on hover */}
-            <div className="hidden group-hover:block absolute top-12 left-0 bg-gray-800 border border-gray-600 text-white px-4 py-2 rounded text-sm whitespace-nowrap z-10 shadow-lg">
-              {credits} tokens available
-            </div>
+            <span className="text-gray-500 text-sm ml-2">+50 Test Credits</span>
           </div>
           <div>
             <span className="text-gray-400">Session Time: </span>
@@ -519,71 +509,27 @@ export default function GeneratePage() {
             <button
               onClick={handleGenerate}
               disabled={isGenerating || !selectedBrand || !shotDescription.trim()}
-              className={`flex-1 py-4 rounded font-bold text-lg transition-colors flex items-center justify-center gap-2 ${
+              className={`flex-1 py-4 rounded font-bold text-lg transition-colors ${
                 isGenerating || !selectedBrand || !shotDescription.trim()
                   ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
                   : 'bg-[#00FF87] text-black hover:bg-[#00DD75]'
               }`}
               style={{ fontFamily: 'JetBrains Mono, monospace' }}
             >
-              {isGenerating && (
-                <svg 
-                  className="animate-spin h-5 w-5" 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  fill="none" 
-                  viewBox="0 0 24 24"
-                >
-                  <circle 
-                    className="opacity-25" 
-                    cx="12" 
-                    cy="12" 
-                    r="10" 
-                    stroke="currentColor" 
-                    strokeWidth="4"
-                  />
-                  <path 
-                    className="opacity-75" 
-                    fill="currentColor" 
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
-              )}
-              {isGenerating ? 'GENERATING...' : 'GENERATE PROMPT (10 tokens)'}
+              {isGenerating ? 'GENERATING...' : 'GENERATE PROMPT (10 credits)'}
             </button>
 
             <button
               onClick={handleRefinePrompt}
               disabled={!lastGeneratedPrompt || isRefining}
-              className={`px-6 py-4 rounded font-bold transition-colors flex items-center gap-2 ${
+              className={`px-6 py-4 rounded font-bold transition-colors ${
                 !lastGeneratedPrompt || isRefining
                   ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
                   : 'bg-gray-800 text-white hover:bg-gray-700 border-2 border-gray-600'
               }`}
               style={{ fontFamily: 'JetBrains Mono, monospace' }}
             >
-              {isRefining && (
-                <svg 
-                  className="animate-spin h-5 w-5" 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  fill="none" 
-                  viewBox="0 0 24 24"
-                >
-                  <circle 
-                    className="opacity-25" 
-                    cx="12" 
-                    cy="12" 
-                    r="10" 
-                    stroke="currentColor" 
-                    strokeWidth="4"
-                  />
-                  <path 
-                    className="opacity-75" 
-                    fill="currentColor" 
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  />
-                </svg>
-              )}
-              {isRefining ? 'REFINING...' : 'REFINE PROMPT (2 tokens)'}
+              {isRefining ? 'REFINING...' : 'REFINE PROMPT (2 credits)'}
             </button>
           </div>
 
