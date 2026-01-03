@@ -1,0 +1,1 @@
+\components folder added to store header site file. This file is not in use but could replace the headers across all site pages.

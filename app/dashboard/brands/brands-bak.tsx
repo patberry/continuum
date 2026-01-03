@@ -101,42 +101,8 @@ export default function BrandsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white">
-        {/* Fixed Header */}
-        <header className="fixed top-0 left-0 right-0 bg-black border-b border-gray-800 px-8 py-5 flex justify-between items-center z-50">
-          <a href="/generate">
-            <img 
-              src="/continuum-logo.png" 
-              alt="Continuum" 
-              className="h-10 cursor-pointer hover:opacity-80 transition-opacity"
-            />
-          </a>
-          <nav className="flex items-center gap-6">
-            <a 
-              href="/generate" 
-              className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
-              style={{ fontFamily: 'JetBrains Mono, monospace' }}
-            >
-              Generate
-            </a>
-            <a 
-              href="/dashboard/brands" 
-              className="text-[#00FF87] font-semibold text-sm transition-colors"
-              style={{ fontFamily: 'JetBrains Mono, monospace' }}
-            >
-              Brands
-            </a>
-            <a 
-              href="/about" 
-              className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
-              style={{ fontFamily: 'JetBrains Mono, monospace' }}
-            >
-              About
-            </a>
-            <UserButton afterSignOutUrl="/" />
-          </nav>
-        </header>
-        <div className="max-w-4xl mx-auto p-8 pt-24">
+      <div className="min-h-screen bg-black text-white p-8">
+        <div className="max-w-4xl mx-auto">
           <p className="text-gray-400">Loading brands...</p>
         </div>
       </div>
@@ -144,45 +110,30 @@ export default function BrandsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      
-      {/* Fixed Header */}
-      <header className="fixed top-0 left-0 right-0 bg-black border-b border-gray-800 px-8 py-5 flex justify-between items-center z-50">
-        <a href="/generate">
-          <img 
-            src="/continuum-logo.png" 
-            alt="Continuum" 
-            className="h-10 cursor-pointer hover:opacity-80 transition-opacity"
-          />
-        </a>
-        <nav className="flex items-center gap-6">
-          <a 
-            href="/generate" 
-            className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
-          >
-            Generate
-          </a>
-          <a 
-            href="/dashboard/brands" 
-            className="text-[#00FF87] font-semibold text-sm transition-colors"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
-          >
-            Brands
-          </a>
-          <a 
-            href="/about" 
-            className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
-          >
-            About
-          </a>
-          <UserButton afterSignOutUrl="/" />
-        </nav>
-      </header>
-
-      {/* Main Content - with top padding for fixed header */}
-      <div className="max-w-4xl mx-auto p-8 pt-24">
+    <div className="min-h-screen bg-black text-white p-8">
+      <div className="max-w-4xl mx-auto">
+        
+        {/* Header with Logo - MATCHING GENERATE PAGE */}
+        <div className="mb-8 flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <a href="/generate">
+              <img 
+                src="/continuum-logo.png" 
+                alt="Continuum" 
+                className="h-12 cursor-pointer hover:opacity-80 transition-opacity"
+              />
+            </a>
+          </div>
+          <div className="flex items-center gap-4">
+            <a href="/generate" className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors">
+              Generate
+            </a>
+            <a href="/about" className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors">
+              About
+            </a>
+            <UserButton afterSignOutUrl="/" />
+          </div>
+        </div>
 
         {/* Subtitle / Explanation */}
         <div className="mb-8 bg-gray-900 border border-gray-800 p-4 rounded">

@@ -1,8 +1,9 @@
 'use client';
 
-import { UserButton } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 
 export default function AboutPage() {
+  const { user } = useUser();
   return (
     <>
       <style jsx global>{`
@@ -11,6 +12,83 @@ export default function AboutPage() {
             background: #000;
             color: #fff;
             line-height: 1.8;
+        }
+
+        .site-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #000;
+            border-bottom: 1px solid #1a1a1a;
+            padding: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .site-nav-container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .site-nav-logo {
+            height: 40px;
+            cursor: pointer;
+        }
+
+        .site-nav-logo img {
+            height: 100%;
+            width: auto;
+        }
+
+        .site-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .site-nav-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .site-nav-link:hover {
+            color: #fff;
+        }
+
+        .site-nav-link.active {
+            color: #ccc;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #00FF87;
+            font-weight: 600;
+            cursor: pointer;
+            overflow: hidden;
+            border: 1px solid #444;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .about-container {
@@ -216,40 +294,26 @@ export default function AboutPage() {
         }
       `}</style>
 
-      {/* Fixed Header - identical to Generate and Brands pages */}
-      <header className="fixed top-0 left-0 right-0 bg-black border-b border-gray-800 px-8 py-5 flex justify-between items-center z-50">
-        <a href="/generate">
-          <img 
-            src="/continuum-logo.png" 
-            alt="Continuum" 
-            className="h-10 cursor-pointer hover:opacity-80 transition-opacity"
-          />
-        </a>
-        <nav className="flex items-center gap-6">
-          <a 
-            href="/generate" 
-            className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
-          >
-            Generate
+      {/* Site Navigation */}
+      <nav className="site-nav">
+        <div className="site-nav-container">
+          <a href="/" className="site-nav-logo">
+            <img src="/continuum-logo.png" alt="CONTINUUM" />
           </a>
-          <a 
-            href="/dashboard/brands" 
-            className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
-          >
-            Brands
-          </a>
-          <a 
-            href="/about" 
-            className="text-[#00FF87] font-semibold text-sm transition-colors"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
-          >
-            About
-          </a>
-          <UserButton afterSignOutUrl="/" />
-        </nav>
-      </header>
+          <div className="site-nav-right">
+            <a href="/generate" className="site-nav-link">Generate</a>
+            <a href="/dashboard/brands" className="site-nav-link">Brands</a>
+            <a href="/about" className="site-nav-link active">About</a>
+            <div className="user-avatar">
+              {user?.imageUrl ? (
+                <img src={user.imageUrl} alt={user.firstName || 'User'} />
+              ) : (
+                <span>{user?.firstName?.charAt(0) || 'U'}</span>
+              )}
+            </div>
+          </div>
+        </div>
+      </nav>
 
       <div className="about-container">
         {/* Header */}
