@@ -1,5 +1,6 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import './globals.css';
+import Footer from './components/Footer';
 
 export const metadata = {
   title: 'Continuum',
@@ -143,8 +144,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         },
       }}
     >
-      <html lang="en">
-        <body>{children}</body>
+      <html lang="en" className="bg-black">
+        <body className="bg-black min-h-screen flex flex-col">
+          <div className="flex-1">
+            {children}
+          </div>
+          <Footer />
+        </body>
       </html>
     </ClerkProvider>
   )
