@@ -5,17 +5,13 @@ export default function Footer() {
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand Column */}
-          <div>
-            <h3 
-              className="text-2xl font-bold mb-3" 
-              style={{ 
-                fontFamily: 'JetBrains Mono, monospace',
-                color: '#00FF87' 
-              }}
-            >
-              CONTINUUM
-            </h3>
-            <p className="text-gray-400 text-sm">
+          <div className="flex flex-col items-start justify-start">
+            <img 
+              src="/continuum-logo.png" 
+              alt="CONTINUUM" 
+              className="h-10 mb-2"
+            />
+            <p className="text-gray-400 text-sm pl-3.5">
               GenAI Brand Intelligence
             </p>
           </div>

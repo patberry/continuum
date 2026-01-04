@@ -1,5 +1,11 @@
 import { UserButton } from '@clerk/nextjs';
-import { Inter } from 'next/font/google';
+import { Poppins, Inter } from 'next/font/google';
+
+const poppins = Poppins({
+  weight: ['100', '200', '300', '400', '500'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 const inter = Inter({
   subsets: ['latin'],
@@ -10,16 +16,16 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-black">
       
-      {/* Header - Matching All Pages */}
+      {/* Header - Matching Screenshot */}
       <div className="border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
-            {/* Logo - Bigger size */}
+            {/* Logo */}
             <a href="/dashboard/brands" className="hover:opacity-80 transition-opacity">
               <img 
                 src="/continuum-logo.png" 
                 alt="CONTINUUM" 
-                className="h-16"
+                className="h-12"
               />
             </a>
 
@@ -27,28 +33,26 @@ export default function AboutPage() {
             <div className="flex items-center gap-8">
               <a 
                 href="/generate"
-                className="text-gray-400 hover:text-white transition-colors text-base"
+                className="text-gray-400 hover:text-white transition-colors"
                 style={{ fontFamily: 'JetBrains Mono, monospace' }}
               >
                 Generate
               </a>
               <a 
                 href="/dashboard/brands"
-                className="text-gray-400 hover:text-white transition-colors text-base"
+                className="text-gray-400 hover:text-white transition-colors"
                 style={{ fontFamily: 'JetBrains Mono, monospace' }}
               >
                 Brands
               </a>
               <a 
                 href="/about"
-                className="text-[#00FF87] text-base"
+                className="text-[#00FF87]"
                 style={{ fontFamily: 'JetBrains Mono, monospace' }}
               >
                 About
               </a>
-              {/* Clerk User Button with Avatar */}
               <UserButton 
-                afterSignOutUrl="/"
                 appearance={{
                   elements: {
                     avatarBox: "w-10 h-10"
@@ -66,13 +70,12 @@ export default function AboutPage() {
         {/* Hero Section */}
         <div className="mb-16">
           <h1 
-            className="text-6xl font-bold mb-6 text-[#00FF87]"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            className={`text-6xl font-light mb-6 text-[#00FF87] ${poppins.className}`}
           >
             GenAI Brand Intelligence
           </h1>
           
-          <p className="text-2xl text-gray-400 mb-12 font-normal">
+          <p className={`text-2xl text-gray-400 mb-12 font-normal ${inter.className}`}>
             Production Infrastructure for the AI Era
           </p>
 
@@ -104,8 +107,7 @@ export default function AboutPage() {
         {/* The Real Problem */}
         <section className="mb-16">
           <h2 
-            className="text-3xl font-bold mb-6 text-[#00FF87]"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            className={`text-3xl font-light mb-6 text-[#00FF87] ${poppins.className}`}
           >
             The Real Problem with AI Video
           </h2>
@@ -134,15 +136,14 @@ export default function AboutPage() {
         {/* The Two Pillars */}
         <section className="mb-16">
           <h2 
-            className="text-3xl font-bold mb-8 text-[#00FF87]"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            className={`text-3xl font-light mb-8 text-[#00FF87] ${poppins.className}`}
           >
             The Two Pillars of Continuum
           </h2>
 
           {/* Pillar 1 */}
           <div className="mb-12">
-            <h3 className="text-2xl font-bold mb-6 text-[#00FF87]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+            <h3 className={`text-2xl font-light mb-6 text-[#00FF87] ${poppins.className}`}>
               1. The Brand Isolation Advantage
             </h3>
             
@@ -165,7 +166,7 @@ export default function AboutPage() {
 
           {/* Pillar 2 */}
           <div>
-            <h3 className="text-2xl font-bold mb-6 text-[#00FF87]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+            <h3 className={`text-2xl font-light mb-6 text-[#00FF87] ${poppins.className}`}>
               2. Compounding Intelligence
             </h3>
             
@@ -192,8 +193,7 @@ export default function AboutPage() {
         {/* Built for Professional Production */}
         <section id="methodology" className="mb-16">
           <h2 
-            className="text-3xl font-bold mb-6 text-[#00FF87]"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            className={`text-3xl font-light mb-6 text-[#00FF87] ${poppins.className}`}
           >
             Built for Commercial Production
           </h2>
@@ -204,7 +204,7 @@ export default function AboutPage() {
 
           {/* Real-World Validated */}
           <div className="mb-12">
-            <h3 className="text-2xl font-bold mb-6 text-[#00FF87]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+            <h3 className={`text-2xl font-light mb-6 text-[#00FF87] ${poppins.className}`}>
               Real-World Validated
             </h3>
             
@@ -224,7 +224,7 @@ export default function AboutPage() {
 
           {/* Extensible Architecture */}
           <div>
-            <h3 className="text-2xl font-bold mb-6 text-[#00FF87]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+            <h3 className={`text-2xl font-light mb-6 text-[#00FF87] ${poppins.className}`}>
               Extensible Architecture
             </h3>
             
@@ -239,8 +239,7 @@ export default function AboutPage() {
         {/* Why Now */}
         <section className="mb-16">
           <h2 
-            className="text-3xl font-bold mb-6 text-[#00FF87]"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            className={`text-3xl font-light mb-6 text-[#00FF87] ${poppins.className}`}
           >
             Why Now
           </h2>

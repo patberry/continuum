@@ -1,100 +1,48 @@
-import { UserButton } from '@clerk/nextjs';
-import { Inter } from 'next/font/google';
-
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-});
-
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-black">
-      
-      {/* Header - Matching All Pages */}
-      <div className="border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-8 py-6">
-          <div className="flex items-center justify-between">
-            {/* Logo - Bigger size */}
-            <a href="/dashboard/brands" className="hover:opacity-80 transition-opacity">
-              <img 
-                src="/continuum-logo.png" 
-                alt="CONTINUUM" 
-                className="h-16"
-              />
-            </a>
-
-            {/* Navigation + User */}
-            <div className="flex items-center gap-8">
-              <a 
-                href="/generate"
-                className="text-gray-400 hover:text-white transition-colors text-base"
-                style={{ fontFamily: 'JetBrains Mono, monospace' }}
-              >
-                Generate
-              </a>
-              <a 
-                href="/dashboard/brands"
-                className="text-gray-400 hover:text-white transition-colors text-base"
-                style={{ fontFamily: 'JetBrains Mono, monospace' }}
-              >
-                Brands
-              </a>
-              <a 
-                href="/about"
-                className="text-[#00FF87] text-base"
-                style={{ fontFamily: 'JetBrains Mono, monospace' }}
-              >
-                About
-              </a>
-              {/* Clerk User Button with Avatar */}
-              <UserButton 
-                afterSignOutUrl="/"
-                appearance={{
-                  elements: {
-                    avatarBox: "w-10 h-10"
-                  }
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className={`max-w-5xl mx-auto px-8 pt-20 pb-0 ${inter.className}`}>
+      <div className="max-w-5xl mx-auto px-8 py-20">
         
         {/* Hero Section */}
         <div className="mb-16">
           <h1 
-            className="text-6xl font-bold mb-6 text-[#00FF87]"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            className="text-6xl font-bold mb-6" 
+            style={{ 
+              fontFamily: 'JetBrains Mono, monospace',
+              color: '#00FF87' 
+            }}
           >
-            GenAI Brand Intelligence
+            CONTINUUM
           </h1>
           
-          <p className="text-2xl text-gray-400 mb-12 font-normal">
-            Production Infrastructure for the AI Era
+          <p className="text-2xl text-white mb-8 font-semibold">
+            Production infrastructure for the AI era.
           </p>
-
-          <hr className="border-[#00FF87] mb-12" />
           
           <div className="bg-gray-900 border-l-4 border-[#00FF87] p-8 mb-8">
             <p className="text-xl text-gray-300 mb-4">
-              <span className="text-[#00FF87] font-semibold">Month one,</span> we help you create broadcast-quality content.
+              <span className="text-white font-semibold">Month one,</span> we help you create broadcast-quality content.
             </p>
             <p className="text-xl text-gray-300">
-              <span className="text-[#00FF87] font-semibold">Month twelve,</span> we know your brands better than junior creatives.
+              <span className="text-white font-semibold">Month twelve,</span> we know your brands better than junior creatives.
             </p>
           </div>
 
-          {/* CTA Button - Centered */}
-          <div className="flex justify-center">
+          {/* CTA Buttons */}
+          <div className="flex gap-4">
             <a 
               href="/dashboard/brands"
               className="px-8 py-4 bg-[#00FF87] text-black font-bold rounded hover:bg-[#00DD75] transition-colors"
               style={{ fontFamily: 'JetBrains Mono, monospace' }}
             >
               Start Building Your Intelligence
+            </a>
+            <a 
+              href="#methodology"
+              className="px-8 py-4 border-2 border-[#00FF87] text-[#00FF87] font-bold rounded hover:bg-[#00FF87] hover:text-black transition-colors"
+              style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            >
+              Our Methodology
             </a>
           </div>
         </div>
@@ -104,7 +52,7 @@ export default function AboutPage() {
         {/* The Real Problem */}
         <section className="mb-16">
           <h2 
-            className="text-3xl font-bold mb-6 text-[#00FF87]"
+            className="text-3xl font-bold mb-6 text-white"
             style={{ fontFamily: 'JetBrains Mono, monospace' }}
           >
             The Real Problem with AI Video
@@ -123,7 +71,7 @@ export default function AboutPage() {
               Currently, every generation starts fresh. Agencies waste time manually reconstructing institutional knowledge and reinventing prompts that worked perfectly last month.
             </p>
             
-            <p className="text-xl text-[#00FF87] pt-4">
+            <p className="text-xl text-[#00FF87] font-semibold pt-4">
               Continuum isn't a prompt generator. It's brand intelligence infrastructure that gets smarter with every project you create.
             </p>
           </div>
@@ -134,7 +82,7 @@ export default function AboutPage() {
         {/* The Two Pillars */}
         <section className="mb-16">
           <h2 
-            className="text-3xl font-bold mb-8 text-[#00FF87]"
+            className="text-3xl font-bold mb-8 text-white"
             style={{ fontFamily: 'JetBrains Mono, monospace' }}
           >
             The Two Pillars of Continuum
@@ -142,7 +90,7 @@ export default function AboutPage() {
 
           {/* Pillar 1 */}
           <div className="mb-12">
-            <h3 className="text-2xl font-bold mb-6 text-[#00FF87]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+            <h3 className="text-2xl font-bold mb-6 text-[#00FF87]">
               1. The Brand Isolation Advantage
             </h3>
             
@@ -152,20 +100,20 @@ export default function AboutPage() {
 
             <ul className="space-y-6">
               <li className="text-gray-300 leading-relaxed">
-                <span className="text-[#00FF87] font-semibold">True Security:</span> This isn't marketing copy; it is row-level security policies enforced at the PostgreSQL layer.
+                <span className="text-white font-semibold">True Security:</span> This isn't marketing copy; it is row-level security policies enforced at the PostgreSQL layer.
               </li>
               <li className="text-gray-300 leading-relaxed">
-                <span className="text-[#00FF87] font-semibold">Verifiable:</span> Each brand exists in a cryptographically verified container with immutable audit trails.
+                <span className="text-white font-semibold">Verifiable:</span> Each brand exists in a cryptographically verified container with immutable audit trails.
               </li>
               <li className="text-gray-300 leading-relaxed">
-                <span className="text-[#00FF87] font-semibold">Competitive Edge:</span> For agencies, this creates a massive advantage when pitching new accounts or passing IT diligence.
+                <span className="text-white font-semibold">Competitive Edge:</span> For agencies, this creates a massive advantage when pitching new accounts or passing IT diligence.
               </li>
             </ul>
           </div>
 
           {/* Pillar 2 */}
           <div>
-            <h3 className="text-2xl font-bold mb-6 text-[#00FF87]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+            <h3 className="text-2xl font-bold mb-6 text-[#00FF87]">
               2. Compounding Intelligence
             </h3>
             
@@ -175,13 +123,13 @@ export default function AboutPage() {
 
             <ul className="space-y-6">
               <li className="text-gray-300 leading-relaxed">
-                <span className="text-[#00FF87] font-semibold">It Learns Preferences:</span> The platform notices you always use 24fps for automotive hero shots, or that Brand X prefers tungsten lighting while Brand Y needs daylight.
+                <span className="text-white font-semibold">It Learns Preferences:</span> The platform notices you always use 24fps for automotive hero shots, or that Brand X prefers tungsten lighting while Brand Y needs daylight.
               </li>
               <li className="text-gray-300 leading-relaxed">
-                <span className="text-[#00FF87] font-semibold">It Optimizes Models:</span> It learns over time which platforms perform better for specific tasks, such as Veo 3 over Sora for complex tracking motion.
+                <span className="text-white font-semibold">It Optimizes Models:</span> It learns over time which platforms perform better for specific tasks, such as Veo 3 over Sora for complex tracking motion.
               </li>
               <li className="text-gray-300 leading-relaxed">
-                <span className="text-[#00FF87] font-semibold">The Data Moat:</span> After a year, you have built proprietary intelligence based on thousands of prompts and learned preferences across brands. This data accumulation creates a genuine competitive advantage that cannot be replicated.
+                <span className="text-white font-semibold">The Data Moat:</span> After a year, you have built proprietary intelligence based on thousands of prompts and learned preferences across brands. This data accumulation creates a genuine competitive advantage that cannot be replicated.
               </li>
             </ul>
           </div>
@@ -192,10 +140,10 @@ export default function AboutPage() {
         {/* Built for Professional Production */}
         <section id="methodology" className="mb-16">
           <h2 
-            className="text-3xl font-bold mb-6 text-[#00FF87]"
+            className="text-3xl font-bold mb-6 text-white"
             style={{ fontFamily: 'JetBrains Mono, monospace' }}
           >
-            Built for Commercial Production
+            Built for Professional Production
           </h2>
           
           <p className="text-gray-300 text-lg mb-12 leading-relaxed">
@@ -204,7 +152,7 @@ export default function AboutPage() {
 
           {/* Real-World Validated */}
           <div className="mb-12">
-            <h3 className="text-2xl font-bold mb-6 text-[#00FF87]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+            <h3 className="text-2xl font-bold mb-6 text-[#00FF87]">
               Real-World Validated
             </h3>
             
@@ -214,17 +162,17 @@ export default function AboutPage() {
 
             <ul className="space-y-6">
               <li className="text-gray-300 leading-relaxed">
-                <span className="text-[#00FF87] font-semibold">Automotive:</span> Proven on a six-shot Porsche Macan Electric commercial that needed to cut together seamlessly.
+                <span className="text-white font-semibold">Automotive:</span> Proven on a six-shot Porsche Macan Electric commercial that needed to cut together seamlessly.
               </li>
               <li className="text-gray-300 leading-relaxed">
-                <span className="text-[#00FF87] font-semibold">Beyond Automotive:</span> Recent testing animated Impressionist paintings with complex, flipbook-style internal movement, validating frame-to-frame consistency for any broadcast-quality content.
+                <span className="text-white font-semibold">Beyond Automotive:</span> Recent testing animated Impressionist paintings with complex, flipbook-style internal movement, validating frame-to-frame consistency for any broadcast-quality content.
               </li>
             </ul>
           </div>
 
           {/* Extensible Architecture */}
           <div>
-            <h3 className="text-2xl font-bold mb-6 text-[#00FF87]" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+            <h3 className="text-2xl font-bold mb-6 text-[#00FF87]">
               Extensible Architecture
             </h3>
             
@@ -239,7 +187,7 @@ export default function AboutPage() {
         {/* Why Now */}
         <section className="mb-16">
           <h2 
-            className="text-3xl font-bold mb-6 text-[#00FF87]"
+            className="text-3xl font-bold mb-6 text-white"
             style={{ fontFamily: 'JetBrains Mono, monospace' }}
           >
             Why Now
@@ -254,13 +202,43 @@ export default function AboutPage() {
               Continuum solves the last-mile problem: making AI video generation reliable enough for professional production at scale. The companies that build proprietary intelligence now will have massive advantages as this becomes the standard workflow in 2025–2026.
             </p>
             
-            <p className="text-xl text-[#00FF87] font-semibold pt-4">
+            <p className="text-xl text-white font-semibold pt-4">
               We aren't building a tool. We're building infrastructure that gets more valuable the longer you use it.
             </p>
           </div>
         </section>
 
         <hr className="border-gray-800 mb-16" />
+
+        {/* Footer CTA */}
+        <div className="text-center">
+          <h2 
+            className="text-4xl font-bold mb-8" 
+            style={{ 
+              fontFamily: 'JetBrains Mono, monospace',
+              color: '#00FF87' 
+            }}
+          >
+            CONTINUUM
+          </h2>
+          
+          <div className="flex gap-4 justify-center">
+            <a 
+              href="mailto:support@continuum.video"
+              className="px-8 py-4 border-2 border-[#00FF87] text-[#00FF87] font-bold rounded hover:bg-[#00FF87] hover:text-black transition-colors"
+              style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            >
+              Contact Us
+            </a>
+            <a 
+              href="/dashboard/brands"
+              className="px-8 py-4 bg-[#00FF87] text-black font-bold rounded hover:bg-[#00DD75] transition-colors"
+              style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            >
+              Login
+            </a>
+          </div>
+        </div>
 
       </div>
     </div>
