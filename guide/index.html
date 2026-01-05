@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continuum PromptMaster — Beta Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --bg-input: #21262d;
+            --border: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --accent-green: #3fb950;
+            --accent-orange: #f0883e;
+            --accent-red: #f85149;
+            --accent-yellow: #d29922;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .beta-badge {
+            display: inline-block;
+            background: var(--accent-orange);
+            color: var(--bg-dark);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        /* Section styling */
+        section {
+            margin-bottom: 4rem;
+        }
+
+        section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        section h2::before {
+            content: attr(data-number);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            background: var(--accent-green);
+            color: var(--bg-dark);
+            font-size: 0.875rem;
+            font-weight: 700;
+            border-radius: 50%;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent-green);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Screenshot containers */
+        .screenshot-container {
+            position: relative;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .screenshot-container img {
+            width: 100%;
+            display: block;
+        }
+
+        .screenshot-placeholder {
+            background: var(--bg-input);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+        }
+
+        /* Callout overlays */
+        .callout {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--accent-green);
+            color: var(--bg-dark);
+            font-weight: 700;
+            font-size: 0.875rem;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        /* Step list */
+        .steps {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .steps li {
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 1.25rem;
+            color: var(--text-secondary);
+        }
+
+        .steps li::before {
+            content: counter(step-counter);
+            counter-increment: step-counter;
+            position: absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.75rem;
+            height: 1.75rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--accent-green);
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 50%;
+        }
+
+        .steps li strong {
+            color: var(--text-primary);
+        }
+
+        /* Tips section */
+        .tip-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .tip {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent-green);
+            padding: 1rem 1.25rem;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .tip-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Limitations */
+        .limitation {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent-orange);
+            padding: 1rem 1.25rem;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 1rem;
+        }
+
+        .limitation-title {
+            font-weight: 600;
+            color: var(--accent-orange);
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .limitation-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Code/mono text */
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-input);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.875em;
+            color: var(--accent-green);
+        }
+
+        /* Links */
+        a {
+            color: var(--accent-green);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA button */
+        .cta-button {
+            display: inline-block;
+            background: var(--accent-green);
+            color: var(--bg-dark);
+            font-weight: 600;
+            padding: 0.875rem 2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(63, 185, 80, 0.3);
+            text-decoration: none;
+        }
+
+        /* Token explanation */
+        .token-info {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem 1.25rem;
+            margin: 1rem 0;
+        }
+
+        .token-info strong {
+            color: var(--accent-yellow);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            section h2 {
+                font-size: 1.25rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="beta-badge">Beta</div>
+            <h1>CONTINUUM PromptMaster</h1>
+            <p class="subtitle">Generate broadcast-ready video prompts with AI. This guide walks you through creating your first prompt.</p>
+        </header>
+
+        <section>
+            <h2 data-number="1">What This Does</h2>
+            <p>PromptMaster transforms your shot descriptions into detailed, platform-optimized prompts for AI video generators like Google Veo 3, Kling, and Sora. It handles the technical translation so you can focus on the creative.</p>
+            <p>You describe the shot. PromptMaster returns a production-ready prompt with camera direction, lighting cues, and platform-specific formatting. It also analyzes your shot and recommends which AI video platform will render it best—with confidence scores and explanations.</p>
+        </section>
+
+        <section>
+            <h2 data-number="2">Get Started</h2>
+            <ol class="steps">
+                <li><strong>Go to</strong> <a href="https://continuum-promptmaster.netlify.app" target="_blank">continuum-promptmaster.netlify.app</a></li>
+                <li><strong>Sign in</strong> with Gmail or create an account with email authentication.</li>
+                <li><strong>You'll receive beta tokens</strong> to generate prompts. Generation costs 10 tokens; refinements cost 2.</li>
+            </ol>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem;">
+                <a href="https://continuum-promptmaster.netlify.app/brands" target="_blank" class="cta-button" style="background: var(--bg-input); color: var(--text-primary); border: 1px solid var(--border);">Open Brands →</a>
+                <a href="https://continuum-promptmaster.netlify.app/generate" target="_blank" class="cta-button">Open Generate →</a>
+            </div>
+        </section>
+
+        <section>
+            <h2 data-number="3">Set Up Your Brand</h2>
+            <p>Brands keep your work organized and teach the AI your context. Each brand is isolated—your Porsche prompts never mix with your Tesla prompts.</p>
+            
+            <div class="screenshot-container">
+                <img src="annotated_Brand_screen.jpg" alt="Brands screen with numbered callouts">
+            </div>
+
+            <ol class="steps">
+                <li><strong>Click "Brands"</strong> in the top navigation.</li>
+                <li><strong>Click "+ CREATE NEW BRAND"</strong> to add a new brand.</li>
+                <li><strong>Add a description</strong> — this context informs how prompts are written. Be specific: "High-end kitchen appliances, premium aesthetic, stainless steel focus" beats "appliances."</li>
+            </ol>
+            <p>You'll select your brand on the Generate screen when creating prompts. Use "None" for non-brand-specific work.</p>
+            <a href="https://continuum-promptmaster.netlify.app/brands" target="_blank" class="cta-button" style="background: var(--bg-input); color: var(--text-primary); border: 1px solid var(--border);">Open Brands →</a>
+        </section>
+
+        <section>
+            <h2 data-number="4">Generate Your First Prompt</h2>
+            
+            <div class="screenshot-container">
+                <img src="annotated_Generate_screen.jpg" alt="Generate screen with numbered callouts">
+            </div>
+
+            <ol class="steps">
+                <li><strong>Select Brand</strong> — Choose from your saved brands or "None."</li>
+                <li><strong>Describe your shot</strong> — Be specific about action, camera, and style. Example: <code>Red 911 headed South on PCH during Golden Hour. Camera is tracking next to car during entire clip. Vehicle moves screen right to screen left. Driver in car wearing sunglasses. Aspect ratio 16:9.</code></li>
+                <li><strong>Review Platform Recommendations</strong> — PromptMaster analyzes your shot and ranks which AI video platforms will handle it best. You'll see confidence percentages and explanations (e.g., "Best for motion-heavy automotive shots").</li>
+                <li><strong>Choose Target Platform</strong> — Accept the top recommendation or override based on your preference or subscription access.</li>
+                <li><strong>Set Clip Duration</strong> — 7 seconds is standard for commercial shots.</li>
+                <li><strong>Click "Generate Prompt"</strong> — Takes ~10 seconds.</li>
+            </ol>
+
+            <div class="token-info">
+                <strong>Token costs:</strong> Generating a new prompt uses 10 tokens. Refining an existing prompt uses 2 tokens. Your balance shows in the top-left.
+            </div>
+            <a href="https://continuum-promptmaster.netlify.app/generate" target="_blank" class="cta-button" style="margin-top: 1rem;">Open Generate →</a>
+        </section>
+
+        <section>
+            <h2 data-number="5">Use Your Generated Prompt</h2>
+            
+            <div class="screenshot-container">
+                <img src="annotated_generated_prompt_screen.jpg" alt="Generated prompt output with Copy button">
+            </div>
+
+            <p>After generation, you'll see a detailed prompt optimized for your target platform:</p>
+
+            <ol class="steps" style="counter-reset: step-counter 6;">
+                <li><strong>Copy your prompt</strong> — Click "Copy" to grab the full generated prompt, then paste it into your video AI platform (Veo 3, Kling, Sora, etc.) and render your video.</li>
+            </ol>
+            
+            <p style="margin-top: 1.5rem;"><strong>Not quite right?</strong> Adjust your shot description and click "Refine Prompt" (2 tokens) to iterate without starting over.</p>
+
+            <div class="token-info">
+                <strong>Agent learning:</strong> Each prompt you generate teaches PromptMaster about your brand. The "Agent learning activated" message means your next prompt for that brand will be informed by this one.
+            </div>
+        </section>
+
+        <section>
+            <h2 data-number="6">Tips for Better Results</h2>
+            <div class="tip-grid">
+                <div class="tip">
+                    <div class="tip-title">Trust the platform recommendations</div>
+                    <p class="tip-text">The confidence scores are based on shot type analysis. If Veo 3 shows 87% for automotive and Sora shows 65%, that gap matters. Use the top pick unless you have a specific reason not to.</p>
+                </div>
+                <div class="tip">
+                    <div class="tip-title">Be specific about vehicles</div>
+                    <p class="tip-text">If there's a car, request a driver. AI video often renders empty cars that look wrong. Same for boats, planes—anything that should be operated.</p>
+                </div>
+                <div class="tip">
+                    <div class="tip-title">Include camera direction</div>
+                    <p class="tip-text">Terms like "tracking shot," "low angle," "dolly in," "aerial pullback" translate well. Describe placement and movement.</p>
+                </div>
+                <div class="tip">
+                    <div class="tip-title">Specify time of day</div>
+                    <p class="tip-text">"Golden hour," "overcast midday," "dusk with city lights" dramatically affect the output quality and mood.</p>
+                </div>
+                <div class="tip">
+                    <div class="tip-title">Add style references</div>
+                    <p class="tip-text">Film noir, claymation, anime, documentary, 70mm cinematic, VHS aesthetic—style keywords help the AI commit to a look.</p>
+                </div>
+                <div class="tip">
+                    <div class="tip-title">Iterate with refinements</div>
+                    <p class="tip-text">Use "Refine Prompt" (2 tokens) to adjust without starting over. Tweak your description and resubmit.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2 data-number="7">Current Limitations</h2>
+            <p>PromptMaster generates prompts—the final video quality depends on the AI video platform you use. Here's what to expect:</p>
+            
+            <div class="limitation">
+                <div class="limitation-title">Fingers and hands</div>
+                <p class="limitation-text">AI video still struggles with accurate hand rendering. Count fingers in your output. Re-render if needed.</p>
+            </div>
+            
+            <div class="limitation">
+                <div class="limitation-title">Text and typography</div>
+                <p class="limitation-text">On-screen text, signs, and logos often render incorrectly or illegibly. Plan to add text in post.</p>
+            </div>
+            
+            <div class="limitation">
+                <div class="limitation-title">Physics realism</div>
+                <p class="limitation-text">Complex motion, reflections, and object interactions may look unnatural. Simpler compositions render better.</p>
+            </div>
+            
+            <div class="limitation">
+                <div class="limitation-title">Consistency across renders</div>
+                <p class="limitation-text">Same prompt, different results. You may need multiple renders to get the shot you want. This is normal.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2 data-number="8">Send Feedback</h2>
+            <p>This is a beta. We want to know what's working, what's broken, and what's missing.</p>
+            <div class="card">
+                <h3>Report issues or suggestions</h3>
+                <p style="margin-bottom: 0;">Email: <a href="mailto:feedback@continuum.video">feedback@continuum.video</a></p>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>Continuum PromptMaster Beta — Built by <a href="#">Continuum Media Works, LLC</a></p>
+        </footer>
+    </div>
+</body>
+</html>
