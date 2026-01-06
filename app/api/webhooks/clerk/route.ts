@@ -22,13 +22,6 @@ export async function POST(req: Request) {
     throw new Error('CLERK_WEBHOOK_SECRET is not set');
   }
 
-Then:
-bashgit add .
-git commit -m "Add webhook debug logging"
-git push origin main
-
-Take a break after pushing. We'll check logs after deploy finishes.Claude is AI and can make mistakes. Please double-check responses.
-  // Get headers
   const headerPayload = headers();
   const svix_id = headerPayload.get('svix-id');
   const svix_timestamp = headerPayload.get('svix-timestamp');
