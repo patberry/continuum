@@ -49,7 +49,7 @@ export async function getBalance(userId: string): Promise<CreditBalance | null> 
     const { data: newBalance, error: insertError } = await supabase
       .from('credit_balances')
       .insert({
-        user_id: userId,
+        balance_id: userId,
         monthly_credits: 50,
         topup_credits: 0,
         total_credits_used: 0
@@ -134,7 +134,7 @@ export async function deductCredits(
   const { data: currentData, error: fetchError } = await supabase
     .from('credit_balances')
     .select('monthly_credits, topup_credits, total_credits_used')
-    .eq('user_id', userId)
+    .eq('balance_id', userId)
     .single();
 
   if (fetchError || !currentData) {
@@ -172,7 +172,7 @@ export async function deductCredits(
       total_credits_used: (currentData.total_credits_used || 0) + amount,
       updated_at: new Date().toISOString()
     })
-    .eq('user_id', userId);
+    .eq('balance_id', userId);
 
   if (updateError) {
     console.error('Failed to update balance:', updateError);
@@ -210,7 +210,7 @@ export async function addCredits(
   const { data: currentData, error: fetchError } = await supabase
     .from('credit_balances')
     .select('monthly_credits, topup_credits')
-    .eq('user_id', userId)
+    .eq('balance_id', userId)
     .single();
 
   if (fetchError || !currentData) return false;
@@ -224,7 +224,7 @@ export async function addCredits(
       [updateField]: currentAmount + amount,
       updated_at: new Date().toISOString()
     })
-    .eq('user_id', userId);
+    .eq('balance_id', userId);
 
   if (error) return false;
 
