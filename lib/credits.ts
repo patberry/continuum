@@ -41,7 +41,7 @@ export async function getBalance(userId: string): Promise<CreditBalance | null> 
   const { data, error } = await supabase
     .from('credit_balances')
     .select('monthly_credits, topup_credits, total_credits_used')
-    .eq('user_id', userId)
+    .eq('balance_id', userId)
     .single();
 
   if (error || !data) {
