@@ -8,12 +8,26 @@ const supabase = createClient(
 );
 
 export async function POST(req: Request) {
+  // DEBUG LOGGING - Check if env vars are accessible
+  console.log('=== WEBHOOK DEBUG START ===');
+  console.log('SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+  console.log('SERVICE_KEY exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);
+  console.log('SERVICE_KEY length:', process.env.SUPABASE_SERVICE_ROLE_KEY?.length);
+  console.log('WEBHOOK_SECRET exists:', !!process.env.CLERK_WEBHOOK_SECRET);
+  console.log('=== WEBHOOK DEBUG END ===');
+
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
     throw new Error('CLERK_WEBHOOK_SECRET is not set');
   }
 
+Then:
+bashgit add .
+git commit -m "Add webhook debug logging"
+git push origin main
+
+Take a break after pushing. We'll check logs after deploy finishes.Claude is AI and can make mistakes. Please double-check responses.
   // Get headers
   const headerPayload = headers();
   const svix_id = headerPayload.get('svix-id');
