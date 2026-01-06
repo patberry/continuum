@@ -77,14 +77,15 @@ export async function POST(req: Request) {
 
       // Allocate credits using YOUR actual table structure
       const { error: creditError } = await supabase
-        .from('credit_balances')
-        .insert({
-          balance_id: clerkUserId,
-          monthly_credits: 1000,
-          topup_credits: 0,
-          total_credits_used: 0,
-          monthly_credits_expire_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-        });
+  .from('credit_balances')
+  .insert({
+    balance_id: clerkUserId,
+    user_id: clerkUserId,  // ADD THIS LINE
+    monthly_credits: 1000,
+    topup_credits: 0,
+    total_credits_used: 0,
+    monthly_credits_expire_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+  });
 
       if (creditError) {
         console.error('Error allocating credits:', creditError);
