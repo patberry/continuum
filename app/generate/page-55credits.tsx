@@ -40,7 +40,7 @@ export default function GeneratePage() {
   const [lastGeneratedPrompt, setLastGeneratedPrompt] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isRefining, setIsRefining] = useState(false);
-  const [credits, setCredits] = useState<number | null>(null);
+  const [credits, setCredits] = useState(55);
   const [sessionTime, setSessionTime] = useState(0);
   const [platformRecommendations, setPlatformRecommendations] = useState<any[]>([]);
   const [error, setError] = useState('');
@@ -153,11 +153,6 @@ export default function GeneratePage() {
     fetchBrands();
   }, []);
 
-  // Load credits from API
-  useEffect(() => {
-    fetchCredits();
-  }, []);
-
   // Session timer
   useEffect(() => {
     const timer = setInterval(() => {
@@ -186,18 +181,6 @@ export default function GeneratePage() {
     } catch (error) {
       console.error('Error fetching brands:', error);
       setBrands([]);
-    }
-  };
-
-  const fetchCredits = async () => {
-    try {
-      const response = await fetch('/api/credits');
-      const data = await response.json();
-      if (data.credits) {
-        setCredits(data.credits.total);
-      }
-    } catch (error) {
-      console.error('Error fetching credits:', error);
     }
   };
 
@@ -231,7 +214,7 @@ export default function GeneratePage() {
       const data = await response.json();
       setGeneratedPrompt(data.prompt);
       setLastGeneratedPrompt(data.prompt);
-      setCredits(prev => prev !== null ? prev - 10 : prev);
+      setCredits(prev => prev - 10);
       setSuccessMessage('Prompt generated! (10 tokens)');
 
     } catch (error: any) {
@@ -269,7 +252,7 @@ export default function GeneratePage() {
       const data = await response.json();
       setGeneratedPrompt(data.refinedPrompt);
       setLastGeneratedPrompt(data.refinedPrompt);
-      setCredits(prev => prev !== null ? prev - 2 : prev);
+      setCredits(prev => prev - 2);
       setSuccessMessage('Prompt refined! (2 tokens)');
 
     } catch (error) {
@@ -371,12 +354,12 @@ export default function GeneratePage() {
           <div className="flex items-center gap-3 group relative cursor-help">
             <span className="text-3xl">⚡</span>
             <span className="text-[#00FF87] text-3xl font-bold" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
-              {credits !== null ? credits : '...'}
+              {credits}
             </span>
             
             {/* Tooltip on hover */}
             <div className="hidden group-hover:block absolute top-12 left-0 bg-gray-800 border border-gray-600 text-white px-4 py-2 rounded text-sm whitespace-nowrap z-10 shadow-lg">
-              {credits !== null ? `${credits} tokens available` : 'Loading...'}
+              {credits} tokens available
             </div>
           </div>
           <div>
