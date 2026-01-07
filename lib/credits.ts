@@ -20,6 +20,11 @@ const TIME_MULTIPLIERS = [
 const BASE_SESSION_COST = 10;
 const ITERATION_COST = 2;
 
+// Beta tester configuration
+const BETA_CREDITS_AMOUNT = 1000;
+const BETA_REPLENISH_THRESHOLD = 100;  // Auto-replenish when below this
+const BETA_PERIOD_DAYS = 30;           // Beta access duration
+
 export interface CreditBalance {
   userId: string;
   monthlyCredits: number;
@@ -35,7 +40,58 @@ export interface DeductionResult {
 }
 
 /**
+ * Check if user is an active beta tester (within 30 days of signup)
+ */
+async function isActiveBetaTester(userId: string): Promise<boolean> {
+  const { data, error } = await supabase
+    .from('beta_testers')
+    .select('signed_up_at')
+    .eq('user_id', userId)
+    .single();
+
+  if (error || !data || !data.signed_up_at) {
+    return false;
+  }
+
+  const signedUpAt = new Date(data.signed_up_at);
+  const now = new Date();
+  const daysSinceSignup = (now.getTime() - signedUpAt.getTime()) / (1000 * 60 * 60 * 24);
+
+  return daysSinceSignup <= BETA_PERIOD_DAYS;
+}
+
+/**
+ * Replenish beta tester credits to full amount
+ */
+async function replenishBetaCredits(userId: string): Promise<void> {
+  console.log(`🔄 Auto-replenishing beta credits for user: ${userId}`);
+  
+  const { error } = await supabase
+    .from('credit_balances')
+    .update({
+      monthly_credits: BETA_CREDITS_AMOUNT,
+      updated_at: new Date().toISOString()
+    })
+    .eq('balance_id', userId);
+
+  if (error) {
+    console.error('Failed to replenish beta credits:', error);
+  } else {
+    // Log the replenishment
+    await supabase.from('credit_transactions').insert({
+      user_id: userId,
+      transaction_type: 'beta_replenish',
+      credit_type: 'monthly',
+      amount: BETA_CREDITS_AMOUNT,
+      description: 'Beta tester auto-replenish'
+    });
+    console.log(`✓ Beta credits replenished to ${BETA_CREDITS_AMOUNT}`);
+  }
+}
+
+/**
  * Get current credit balance for a user
+ * Auto-replenishes for active beta testers when below threshold
  */
 export async function getBalance(userId: string): Promise<CreditBalance | null> {
   const { data, error } = await supabase
@@ -68,6 +124,25 @@ export async function getBalance(userId: string): Promise<CreditBalance | null> 
       topupCredits: 0,
       totalAvailable: 50
     };
+  }
+
+  // Check for beta tester auto-replenish
+  const totalAvailable = data.monthly_credits + data.topup_credits;
+  
+  if (totalAvailable < BETA_REPLENISH_THRESHOLD) {
+    const isBeta = await isActiveBetaTester(userId);
+    
+    if (isBeta) {
+      await replenishBetaCredits(userId);
+      
+      // Return replenished balance
+      return {
+        userId,
+        monthlyCredits: BETA_CREDITS_AMOUNT,
+        topupCredits: data.topup_credits,
+        totalAvailable: BETA_CREDITS_AMOUNT + data.topup_credits
+      };
+    }
   }
 
   return {
