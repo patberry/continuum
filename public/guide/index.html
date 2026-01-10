@@ -306,6 +306,45 @@
             color: var(--accent-yellow);
         }
 
+        /* Learning callout - new style for feedback section */
+        .learning-callout {
+            background: linear-gradient(135deg, rgba(63, 185, 80, 0.1) 0%, rgba(63, 185, 80, 0.05) 100%);
+            border: 1px solid var(--accent-green);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .learning-callout strong {
+            color: var(--accent-green);
+        }
+
+        /* Rating scale visual */
+        .rating-scale {
+            display: flex;
+            justify-content: space-between;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .rating-item {
+            text-align: center;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .rating-item.failed { background: rgba(248, 81, 73, 0.2); color: var(--accent-red); }
+        .rating-item.poor { background: rgba(240, 136, 62, 0.2); color: var(--accent-orange); }
+        .rating-item.okay { background: rgba(210, 153, 34, 0.2); color: var(--accent-yellow); }
+        .rating-item.good { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); }
+        .rating-item.perfect { background: rgba(63, 185, 80, 0.3); color: var(--accent-green); font-weight: 600; }
+
         /* Footer */
         .footer {
             margin-top: 4rem;
@@ -332,6 +371,10 @@
 
             .container {
                 padding: 2rem 1rem;
+            }
+
+            .rating-scale {
+                flex-direction: column;
             }
         }
     </style>
@@ -423,7 +466,43 @@
         </section>
 
         <section>
-            <h2 data-number="6">Tips for Better Results</h2>
+            <h2 data-number="6">Rate Your Results (Train the Agent)</h2>
+            
+            <p>After you copy a prompt and render your video, a rating modal will appear. <strong>This is how you train the agent.</strong> Your ratings directly improve future prompt generation for your brand.</p>
+
+            <!-- Placeholder for annotated screenshot of rating modal -->
+            <div class="screenshot-container">
+                <div class="screenshot-placeholder">[RATING MODAL SCREENSHOT]<br>Annotate and replace with: annotated_rating_modal.jpg</div>
+            </div>
+
+            <p>The rating scale reflects real production outcomes:</p>
+
+            <div class="rating-scale">
+                <div class="rating-item perfect">Perfect<br><small>Nailed it</small></div>
+                <div class="rating-item good">Good<br><small>Minor tweaks</small></div>
+                <div class="rating-item okay">Okay<br><small>Needs work</small></div>
+                <div class="rating-item poor">Poor<br><small>Major issues</small></div>
+                <div class="rating-item failed">Failed<br><small>Unusable</small></div>
+            </div>
+
+            <ol class="steps">
+                <li><strong>Rate the rendered output</strong> — After rendering in Veo/Kling/Sora, rate how well the prompt performed. Be honest—failed renders teach the agent what to avoid.</li>
+                <li><strong>Add notes (optional)</strong> — Describe what worked or didn't: "Motion was smooth but lighting too dark" or "Character consistency broke at 4 seconds."</li>
+                <li><strong>Submit or skip</strong> — Click your rating to submit, or "Dismiss" to skip. You can also select "Rate Later" if you haven't rendered yet.</li>
+            </ol>
+
+            <div class="learning-callout">
+                <strong>Why this matters:</strong> The agent correlates your ratings with prompt structure, platform choice, shot type, and brand context. After 10-20 rated prompts per brand, you'll notice meaningfully better suggestions. This is real machine learning—your feedback is the training data.
+            </div>
+
+            <div class="tip">
+                <div class="tip-title">Pro tip: Rate failures too</div>
+                <p class="tip-text">A "Failed" rating with notes like "hands had 7 fingers" or "car floated off road" teaches the agent to avoid those prompt patterns. Negative feedback is as valuable as positive.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2 data-number="7">Tips for Better Results</h2>
             <div class="tip-grid">
                 <div class="tip">
                     <div class="tip-title">Trust the platform recommendations</div>
@@ -453,7 +532,7 @@
         </section>
 
         <section>
-            <h2 data-number="7">Current Limitations</h2>
+            <h2 data-number="8">Current Limitations</h2>
             <p>PromptMaster generates prompts—the final video quality depends on the AI video platform you use. Here's what to expect:</p>
             
             <div class="limitation">
@@ -478,7 +557,7 @@
         </section>
 
         <section>
-            <h2 data-number="8">Send Feedback</h2>
+            <h2 data-number="9">Send Feedback</h2>
             <p>This is a beta. We want to know what's working, what's broken, and what's missing.</p>
             <div class="card">
                 <h3>Report issues or suggestions</h3>
