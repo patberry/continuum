@@ -119,6 +119,7 @@ export async function POST(request: Request) {
     let creditsToCharge = isNewSession ? NEW_SESSION_CREDITS : ITERATION_CREDITS;
 
     if (isNewSession) {
+      console.log('=== ATTEMPTING SESSION INSERT ===', { userId, brandId });
       const { data: newSession, error: sessionError } = await supabase
         .from('sessions')
         .insert({
@@ -131,6 +132,7 @@ export async function POST(request: Request) {
         .select()
         .single();
 
+      console.log('=== SESSION INSERT RESULT ===', { newSession, sessionError });
       if (sessionError) {
         console.error('Session creation error:', sessionError);
         return NextResponse.json({ error: 'Failed to create session' }, { status: 500 });
@@ -250,6 +252,7 @@ export async function POST(request: Request) {
       .select()
       .single();
 
+    console.log('=== PROMPT INSERT RESULT ===', { savedPrompt, promptSaveError });
     if (promptSaveError) {
       console.error('Failed to save prompt:', promptSaveError);
     }
