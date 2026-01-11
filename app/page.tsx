@@ -2,18 +2,32 @@
 
 import { useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const { isSignedIn, isLoaded } = useAuth();
   const router = useRouter();
+  const [showContent, setShowContent] = useState(false);
+  const [minDelayPassed, setMinDelayPassed] = useState(false);
 
-  // Auto-redirect signed-in users to generate page
+  // 3-second minimum display time
   useEffect(() => {
-    if (isLoaded && isSignedIn) {
-      router.push('/generate');
+    const timer = setTimeout(() => {
+      setMinDelayPassed(true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Only proceed after both: auth loaded AND 3 seconds passed
+  useEffect(() => {
+    if (isLoaded && minDelayPassed) {
+      if (isSignedIn) {
+        router.push('/generate');
+      } else {
+        setShowContent(true);
+      }
     }
-  }, [isLoaded, isSignedIn, router]);
+  }, [isLoaded, minDelayPassed, isSignedIn, router]);
 
   return (
     <div 
@@ -53,8 +67,8 @@ export default function Home() {
         GEN AI BRAND INTELLIGENCE
       </p>
       
-      {/* CTA Button */}
-      {isLoaded && !isSignedIn && (
+      {/* CTA Button - only shows after 3 sec AND not signed in */}
+      {showContent && (
         <a
           href="/sign-in"
           style={{
@@ -69,6 +83,7 @@ export default function Home() {
             borderRadius: '6px',
             textDecoration: 'none',
             transition: 'background-color 0.2s ease',
+            animation: 'fadeIn 0.5s ease',
           }}
           onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#00DD75'}
           onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#00FF87'}
@@ -77,8 +92,8 @@ export default function Home() {
         </a>
       )}
 
-      {/* Loading state while checking auth */}
-      {!isLoaded && (
+      {/* Spinner while waiting */}
+      {!showContent && (
         <div 
           style={{
             width: '40px',
@@ -94,6 +109,10 @@ export default function Home() {
       <style>{`
         @keyframes spin {
           to { transform: rotate(360deg); }
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </div>

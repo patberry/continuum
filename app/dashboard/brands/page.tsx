@@ -3,24 +3,12 @@
 
 import { useState, useEffect } from 'react'
 import { UserButton } from '@clerk/nextjs'
-import BrandGuidelinesEditor from '@/components/BrandGuidelinesEditor'
-
-interface Brand {
-  brand_id: string;
-  brand_name: string;
-  brand_description: string;
-  created_at: string;
-  industry?: string;
-  guidelines_source?: string;
-  guidelines_updated_at?: string;
-}
 
 export default function BrandsPage() {
-  const [brands, setBrands] = useState<Brand[]>([])
+  const [brands, setBrands] = useState([])
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
   const [showForm, setShowForm] = useState(false)
-  const [editingBrandId, setEditingBrandId] = useState<string | null>(null)
   
   // Form state
   const [brandName, setBrandName] = useState('')
@@ -52,6 +40,7 @@ export default function BrandsPage() {
   async function createBrand(e: React.FormEvent) {
     e.preventDefault()
     
+    // Client-side validation
     const trimmedName = brandName.trim()
     if (!trimmedName) {
       setError('Brand name is required')
@@ -74,6 +63,7 @@ export default function BrandsPage() {
       const data = await response.json()
       
       if (response.ok) {
+        // Success - refresh list
         fetchBrands()
         setBrandName('')
         setBrandDescription('')
@@ -89,7 +79,7 @@ export default function BrandsPage() {
   }
 
   async function deleteBrand(brandId: string) {
-    if (!confirm('Are you sure you want to delete this brand? All associated intelligence will be lost.')) {
+    if (!confirm('Are you sure you want to delete this brand?')) {
       return
     }
     
@@ -109,26 +99,11 @@ export default function BrandsPage() {
     }
   }
 
-  const getGuidelinesStatus = (brand: Brand) => {
-    if (!brand.guidelines_source) {
-      return { label: 'No guidelines', color: 'text-gray-500', bg: 'bg-gray-800' };
-    }
-    if (brand.guidelines_source === 'manual') {
-      return { label: 'Manual', color: 'text-blue-400', bg: 'bg-blue-900/30' };
-    }
-    if (brand.guidelines_source === 'pdf_parsed') {
-      return { label: 'PDF Imported', color: 'text-purple-400', bg: 'bg-purple-900/30' };
-    }
-    return { label: 'AI Inferred', color: 'text-yellow-400', bg: 'bg-yellow-900/30' };
-  };
-
-  // Find the brand being edited for the modal
-  const editingBrand = brands.find(b => b.brand_id === editingBrandId);
-
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-white">
-        <header className="fixed top-0 left-16 right-0 bg-black border-b border-gray-800 px-8 py-5 flex justify-between items-center z-50">
+        {/* Fixed Header */}
+        <header className="fixed top-0 left-0 right-0 bg-black border-b border-gray-800 px-8 py-5 flex justify-between items-center z-50">
           <a href="/generate">
             <img 
               src="/continuum-logo.png" 
@@ -137,14 +112,31 @@ export default function BrandsPage() {
             />
           </a>
           <nav className="flex items-center gap-6">
-            <a href="/generate" className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors" style={{ fontFamily: 'JetBrains Mono, monospace' }}>Generate</a>
-            <a href="/dashboard/brands" className="text-[#00FF87] font-semibold text-sm transition-colors" style={{ fontFamily: 'JetBrains Mono, monospace' }}>Brands</a>
-            <a href="/feedback" className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors" style={{ fontFamily: 'JetBrains Mono, monospace' }}>Feedback</a>
-            <a href="/about" className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors" style={{ fontFamily: 'JetBrains Mono, monospace' }}>About</a>
+            <a 
+              href="/generate" 
+              className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+              style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            >
+              Generate
+            </a>
+            <a 
+              href="/dashboard/brands" 
+              className="text-[#00FF87] font-semibold text-sm transition-colors"
+              style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            >
+              Brands
+            </a>
+            <a 
+              href="/about" 
+              className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+              style={{ fontFamily: 'JetBrains Mono, monospace' }}
+            >
+              About
+            </a>
             <UserButton afterSignOutUrl="/" />
           </nav>
         </header>
-        <div className="ml-16 max-w-4xl mx-auto p-8 pt-24">
+        <div className="max-w-4xl mx-auto p-8 pt-24">
           <p className="text-gray-400">Loading brands...</p>
         </div>
       </div>
@@ -155,7 +147,7 @@ export default function BrandsPage() {
     <div className="min-h-screen bg-black text-white">
       
       {/* Fixed Header */}
-      <header className="fixed top-0 left-16 right-0 bg-black border-b border-gray-800 px-8 py-5 flex justify-between items-center z-50">
+      <header className="fixed top-0 left-0 right-0 bg-black border-b border-gray-800 px-8 py-5 flex justify-between items-center z-50">
         <a href="/generate">
           <img 
             src="/continuum-logo.png" 
@@ -164,18 +156,35 @@ export default function BrandsPage() {
           />
         </a>
         <nav className="flex items-center gap-6">
-          <a href="/generate" className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors" style={{ fontFamily: 'JetBrains Mono, monospace' }}>Generate</a>
-          <a href="/dashboard/brands" className="text-[#00FF87] font-semibold text-sm transition-colors" style={{ fontFamily: 'JetBrains Mono, monospace' }}>Brands</a>
-          <a href="/feedback" className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors" style={{ fontFamily: 'JetBrains Mono, monospace' }}>Feedback</a>
-          <a href="/about" className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors" style={{ fontFamily: 'JetBrains Mono, monospace' }}>About</a>
+          <a 
+            href="/generate" 
+            className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+            style={{ fontFamily: 'JetBrains Mono, monospace' }}
+          >
+            Generate
+          </a>
+          <a 
+            href="/dashboard/brands" 
+            className="text-[#00FF87] font-semibold text-sm transition-colors"
+            style={{ fontFamily: 'JetBrains Mono, monospace' }}
+          >
+            Brands
+          </a>
+          <a 
+            href="/about" 
+            className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+            style={{ fontFamily: 'JetBrains Mono, monospace' }}
+          >
+            About
+          </a>
           <UserButton afterSignOutUrl="/" />
         </nav>
       </header>
 
-      {/* Main Content */}
-      <div className="ml-16 max-w-4xl mx-auto p-8 pt-24">
+      {/* Main Content - with top padding for fixed header */}
+      <div className="max-w-4xl mx-auto p-8 pt-24">
 
-        {/* Subtitle */}
+        {/* Subtitle / Explanation */}
         <div className="mb-8 bg-gray-900 border border-gray-800 p-4 rounded">
           <p className="text-gray-300 text-sm">
             Each brand is completely isolated. <span className="text-[#00FF87]">Porsche intelligence never touches Tesla data.</span>
@@ -274,84 +283,47 @@ export default function BrandsPage() {
               <p className="text-gray-400">No brands yet. Create your first brand profile to get started.</p>
             </div>
           ) : (
-            brands.map((brand) => {
-              const guidelinesStatus = getGuidelinesStatus(brand);
-              
-              return (
-                <div 
-                  key={brand.brand_id} 
-                  className="bg-gray-900 border border-gray-700 p-6 rounded hover:border-gray-600 transition-colors"
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className="text-xl">🔒</span>
-                        <h3 className="text-2xl font-bold" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00FF87' }}>
-                          {brand.brand_name}
-                        </h3>
-                        {brand.industry && (
-                          <span className="text-xs bg-gray-800 text-gray-400 px-2 py-1 rounded">
-                            {brand.industry}
-                          </span>
-                        )}
-                      </div>
-                      
-                      {brand.brand_description && (
-                        <p className="text-gray-400 text-sm mt-2">{brand.brand_description}</p>
-                      )}
-                      
-                      <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
-                        <span>Created: {new Date(brand.created_at).toLocaleDateString()}</span>
-                        <span className={`${guidelinesStatus.bg} ${guidelinesStatus.color} px-2 py-1 rounded`}>
-                          {guidelinesStatus.label}
-                        </span>
-                        {brand.guidelines_updated_at && (
-                          <span>Updated: {new Date(brand.guidelines_updated_at).toLocaleDateString()}</span>
-                        )}
-                      </div>
+            brands.map((brand: any) => (
+              <div 
+                key={brand.brand_id} 
+                onClick={() => window.location.href = `/generate?brand=${brand.brand_id}`}
+                className="bg-gray-900 border border-gray-700 p-6 rounded hover:border-[#00FF87] transition-colors cursor-pointer"
+              >
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-xl">🔒</span>
+                      <h3 className="text-2xl font-bold" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00FF87' }}>
+                        {brand.brand_name}
+                      </h3>
                     </div>
                     
-                    <div className="flex flex-col gap-2 ml-4">
-                      <button
-                        onClick={() => window.location.href = '/generate'}
-                        className="px-4 py-2 text-sm bg-[#00FF87] text-black rounded font-bold hover:bg-[#00DD75] transition-colors"
-                        style={{ fontFamily: 'JetBrains Mono, monospace' }}
-                      >
-                        GENERATE
-                      </button>
-                      <button
-                        onClick={() => setEditingBrandId(brand.brand_id)}
-                        className="px-4 py-2 text-sm bg-gray-800 text-white rounded font-bold hover:bg-gray-700 border border-gray-600 transition-colors"
-                        style={{ fontFamily: 'JetBrains Mono, monospace' }}
-                      >
-                        GUIDELINES
-                      </button>
-                      <button
-                        onClick={() => deleteBrand(brand.brand_id)}
-                        className="px-4 py-2 text-sm text-red-500 hover:text-red-400 font-bold"
-                        style={{ fontFamily: 'JetBrains Mono, monospace' }}
-                      >
-                        DELETE
-                      </button>
+                    {brand.brand_description && (
+                      <p className="text-gray-400 text-sm mt-2">{brand.brand_description}</p>
+                    )}
+                    
+                    <div className="mt-3 text-xs text-gray-500">
+                      Created: {new Date(brand.created_at).toLocaleDateString()}
                     </div>
                   </div>
+                  
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteBrand(brand.brand_id);
+                    }}
+                    className="ml-4 text-red-500 hover:text-red-400 text-sm font-bold"
+                    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+                  >
+                    DELETE
+                  </button>
                 </div>
-              );
-            })
+              </div>
+            ))
           )}
         </div>
 
       </div>
-
-      {/* Guidelines Editor Modal */}
-      {editingBrandId && editingBrand && (
-        <BrandGuidelinesEditor
-          brandId={editingBrandId}
-          brandName={editingBrand.brand_name}
-          onClose={() => setEditingBrandId(null)}
-          onSaved={() => fetchBrands()}
-        />
-      )}
     </div>
   )
 }

@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { UserButton } from '@clerk/nextjs';
-import RatingModal from '@/components/RatingModal';
 
 // Platform configuration with character limits
 const PLATFORMS = [
@@ -31,6 +31,9 @@ const CLIP_DURATIONS = [
 ];
 
 export default function GeneratePage() {
+  // Get URL search params for brand pre-selection
+  const searchParams = useSearchParams();
+  
   // State
   const [brands, setBrands] = useState<any[]>([]);
   const [selectedBrand, setSelectedBrand] = useState('');
@@ -46,15 +49,6 @@ export default function GeneratePage() {
   const [platformRecommendations, setPlatformRecommendations] = useState<any[]>([]);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-
-  // Rating modal state
-  const [showRatingModal, setShowRatingModal] = useState(false);
-  const [currentPromptId, setCurrentPromptId] = useState<string | null>(null);
-  const [currentPromptPreview, setCurrentPromptPreview] = useState('');
-  const [isNewSessionRating, setIsNewSessionRating] = useState(false);
-  const [pendingRatingPrompt, setPendingRatingPrompt] = useState<any>(null);
-  const [dismissedPrompts, setDismissedPrompts] = useState<Set<string>>(new Set());
-  const [laterPrompts, setLaterPrompts] = useState<Set<string>>(new Set());
 
   // Calculate platform recommendations based on shot description
   const calculatePlatformRecommendations = (description: string) => {
@@ -158,19 +152,14 @@ export default function GeneratePage() {
     }
   }, [shotDescription]);
 
-  // Load brands
+  // Load brands (with URL param support for pre-selection)
   useEffect(() => {
     fetchBrands();
-  }, []);
+  }, [searchParams]);
 
   // Load credits from API
   useEffect(() => {
     fetchCredits();
-  }, []);
-
-  // Check for unrated prompts on mount (new session scenario)
-  useEffect(() => {
-    checkUnratedPrompts();
   }, []);
 
   // Session timer
@@ -191,7 +180,13 @@ export default function GeneratePage() {
       
       if (Array.isArray(brandsArray)) {
         setBrands(brandsArray);
-        if (brandsArray.length > 0) {
+        
+        // Check for brand query param first (from Brands page click)
+        const brandFromUrl = searchParams.get('brand');
+        if (brandFromUrl && brandsArray.some((b: any) => b.brand_id === brandFromUrl)) {
+          setSelectedBrand(brandFromUrl);
+        } else if (brandsArray.length > 0) {
+          // Fallback to first brand if no query param
           setSelectedBrand(brandsArray[0].brand_id);
         }
       } else {
@@ -213,24 +208,6 @@ export default function GeneratePage() {
       }
     } catch (error) {
       console.error('Error fetching credits:', error);
-    }
-  };
-
-  const checkUnratedPrompts = async () => {
-    try {
-      const response = await fetch('/api/prompts/unrated');
-      if (response.ok) {
-        const data = await response.json();
-        if (data.unratedPrompt && !dismissedPrompts.has(data.unratedPrompt.prompt_id)) {
-          setPendingRatingPrompt(data.unratedPrompt);
-          setCurrentPromptId(data.unratedPrompt.prompt_id);
-          setCurrentPromptPreview(data.unratedPrompt.prompt_text);
-          setIsNewSessionRating(true);
-          setShowRatingModal(true);
-        }
-      }
-    } catch (error) {
-      console.error('Error checking unrated prompts:', error);
     }
   };
 
@@ -264,13 +241,6 @@ export default function GeneratePage() {
       const data = await response.json();
       setGeneratedPrompt(data.prompt);
       setLastGeneratedPrompt(data.prompt);
-      
-      // Store prompt ID for rating
-      if (data.promptId) {
-        setCurrentPromptId(data.promptId);
-        setCurrentPromptPreview(data.prompt);
-      }
-      
       setCredits(prev => prev !== null ? prev - 10 : prev);
       setSuccessMessage('Prompt generated! (10 tokens)');
 
@@ -309,13 +279,6 @@ export default function GeneratePage() {
       const data = await response.json();
       setGeneratedPrompt(data.refinedPrompt);
       setLastGeneratedPrompt(data.refinedPrompt);
-      
-      // Update prompt ID for rating
-      if (data.promptId) {
-        setCurrentPromptId(data.promptId);
-        setCurrentPromptPreview(data.refinedPrompt);
-      }
-      
       setCredits(prev => prev !== null ? prev - 2 : prev);
       setSuccessMessage('Prompt refined! (2 tokens)');
 
@@ -330,36 +293,7 @@ export default function GeneratePage() {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(generatedPrompt);
     setSuccessMessage('Copied to clipboard!');
-    
-    // Show rating modal after copy (if we have a prompt ID and haven't dismissed)
-    if (currentPromptId && !dismissedPrompts.has(currentPromptId)) {
-      setIsNewSessionRating(false);
-      setTimeout(() => {
-        setShowRatingModal(true);
-      }, 500);
-    }
-  };
-
-  const handleRatingDismiss = () => {
-    if (currentPromptId) {
-      setDismissedPrompts(prev => new Set(prev).add(currentPromptId));
-    }
-    setShowRatingModal(false);
-    setPendingRatingPrompt(null);
-  };
-
-  const handleRatingLater = () => {
-    if (currentPromptId) {
-      setLaterPrompts(prev => new Set(prev).add(currentPromptId));
-    }
-    setShowRatingModal(false);
-  };
-
-  const handleRated = (rating: number) => {
-    setShowRatingModal(false);
-    setPendingRatingPrompt(null);
-    setSuccessMessage(`Rating saved! Your feedback improves future recommendations.`);
-    setTimeout(() => setSuccessMessage(''), 3000);
+    setTimeout(() => setSuccessMessage(''), 2000);
   };
 
   const formatTime = (seconds: number) => {
@@ -404,17 +338,6 @@ export default function GeneratePage() {
   return (
     <div className="min-h-screen bg-black text-white">
       
-      {/* Rating Modal */}
-      <RatingModal
-        isOpen={showRatingModal}
-        promptId={currentPromptId || ''}
-        promptPreview={currentPromptPreview}
-        onClose={handleRatingDismiss}
-        onLater={handleRatingLater}
-        onRated={handleRated}
-        isNewSession={isNewSessionRating}
-      />
-
       {/* Fixed Header */}
       <header className="fixed top-0 left-0 right-0 bg-black border-b border-gray-800 px-8 py-5 flex justify-between items-center z-50">
         <a href="/generate">
