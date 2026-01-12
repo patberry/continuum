@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continuum Ad - The Ad Stack</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #333;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .label {
+            font-family: 'JetBrains Mono', monospace;
+            color: #888;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        /* Version D: Mystique with Logo */
+        .ad-mystique {
+            width: 600px;
+            background: #000;
+            border: 1px solid #00FF87;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ad-mystique::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00FF87, transparent);
+        }
+
+        .ad-mystique .pre-headline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #00FF87;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 25px;
+        }
+
+        .ad-mystique .logo-img {
+            height: 45px;
+            margin-bottom: 8px;
+        }
+
+        .ad-mystique .tagline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+        }
+
+        .ad-mystique .headline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .ad-mystique .subhead {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .ad-mystique .cta {
+            display: inline-block;
+            background: #00FF87;
+            color: #000;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 14px 40px;
+            text-decoration: none;
+        }
+
+        .ad-mystique .beta-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #00FF87;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+
+        .ad-mystique .beta-tag strong {
+            color: #fff;
+        }
+
+        /* Alt version - tokens more prominent */
+        .ad-mystique-v2 {
+            width: 600px;
+            background: #000;
+            border: 1px solid #00FF87;
+            padding: 45px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ad-mystique-v2::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00FF87, transparent);
+        }
+
+        .ad-mystique-v2 .pre-headline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #00FF87;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+        }
+
+        .ad-mystique-v2 .logo-img {
+            height: 40px;
+            margin-bottom: 6px;
+        }
+
+        .ad-mystique-v2 .tagline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+        }
+
+        .ad-mystique-v2 .headline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .ad-mystique-v2 .subhead {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .ad-mystique-v2 .cta-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .ad-mystique-v2 .cta {
+            display: inline-block;
+            background: #00FF87;
+            color: #000;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 14px 35px;
+            text-decoration: none;
+        }
+
+        .ad-mystique-v2 .token-callout {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .ad-mystique-v2 .token-callout strong {
+            color: #00FF87;
+            font-size: 15px;
+        }
+
+        /* Compact version for tighter layouts */
+        .ad-compact {
+            width: 600px;
+            background: #000;
+            border: 1px solid #00FF87;
+            padding: 35px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .ad-compact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00FF87, transparent);
+        }
+
+        .ad-compact .left {
+            text-align: left;
+        }
+
+        .ad-compact .logo-img {
+            height: 32px;
+            margin-bottom: 8px;
+        }
+
+        .ad-compact .headline {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #fff;
+            line-height: 1.5;
+        }
+
+        .ad-compact .headline .dim {
+            color: #666;
+        }
+
+        .ad-compact .right {
+            text-align: right;
+        }
+
+        .ad-compact .cta {
+            display: inline-block;
+            background: #00FF87;
+            color: #000;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 12px 24px;
+            text-decoration: none;
+            margin-bottom: 8px;
+        }
+
+        .ad-compact .token-note {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #00FF87;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- VERSION 1: Mystique with Logo (Full) -->
+    <div>
+        <div class="label">Version 1: Full Mystique</div>
+        <div class="ad-mystique">
+            <div class="pre-headline">Now in Beta</div>
+            <!-- Replace src with actual logo path -->
+            <img src="https://continuum-promptmaster.netlify.app/continuum-logo.png" alt="Continuum" class="logo-img">
+            <div class="tagline">Gen AI Brand Intelligence</div>
+            <div class="headline">
+                AI video prompts that get smarter<br>
+                with every shot you create.
+            </div>
+            <div class="subhead">
+                Porsche intelligence never touches Tesla data.
+            </div>
+            <a href="https://continuum.video/guide" class="cta">Get Early Access</a>
+            <div class="beta-tag"><strong>250 free tokens</strong> for beta testers</div>
+        </div>
+    </div>
+
+    <!-- VERSION 2: Side-by-side CTA + Tokens -->
+    <div>
+        <div class="label">Version 2: Tokens More Prominent</div>
+        <div class="ad-mystique-v2">
+            <div class="pre-headline">Now in Beta</div>
+            <img src="https://continuum-promptmaster.netlify.app/continuum-logo.png" alt="Continuum" class="logo-img">
+            <div class="tagline">Gen AI Brand Intelligence</div>
+            <div class="headline">
+                AI video prompts that get smarter<br>
+                with every shot you create.
+            </div>
+            <div class="subhead">
+                Porsche intelligence never touches Tesla data.
+            </div>
+            <div class="cta-row">
+                <a href="https://continuum.video/guide" class="cta">Get Early Access</a>
+                <div class="token-callout"><strong>250</strong> free tokens</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VERSION 3: Compact Horizontal -->
+    <div>
+        <div class="label">Version 3: Compact</div>
+        <div class="ad-compact">
+            <div class="left">
+                <img src="https://continuum-promptmaster.netlify.app/continuum-logo.png" alt="Continuum" class="logo-img">
+                <div class="headline">
+                    AI video prompts that learn your brands.<br>
+                    <span class="dim">Beta now open.</span>
+                </div>
+            </div>
+            <div class="right">
+                <a href="https://continuum.video/guide" class="cta">Early Access</a>
+                <div class="token-note">250 free tokens</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
