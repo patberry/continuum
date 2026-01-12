@@ -20,9 +20,6 @@ const TIME_MULTIPLIERS = [
 const BASE_SESSION_COST = 10;
 const ITERATION_COST = 2;
 
-// New user signup credits
-const SIGNUP_CREDITS = 250;
-
 // Beta tester configuration
 const BETA_CREDITS_AMOUNT = 1000;
 const BETA_REPLENISH_THRESHOLD = 100;  // Auto-replenish when below this
@@ -94,7 +91,6 @@ async function replenishBetaCredits(userId: string): Promise<void> {
 
 /**
  * Get current credit balance for a user
- * Auto-provisions new users with signup credits
  * Auto-replenishes for active beta testers when below threshold
  */
 export async function getBalance(userId: string): Promise<CreditBalance | null> {
@@ -105,12 +101,12 @@ export async function getBalance(userId: string): Promise<CreditBalance | null> 
     .single();
 
   if (error || !data) {
-    // New user - create initial balance with signup credits
+    // New user - create initial balance (free tier: 50 credits)
     const { data: newBalance, error: insertError } = await supabase
       .from('credit_balances')
       .insert({
         user_id: userId,
-        monthly_credits: SIGNUP_CREDITS,
+        monthly_credits: 50,
         topup_credits: 0,
         total_credits_used: 0
       })
@@ -122,22 +118,11 @@ export async function getBalance(userId: string): Promise<CreditBalance | null> 
       return null;
     }
 
-    // Log the signup bonus
-    await supabase.from('credit_transactions').insert({
-      user_id: userId,
-      transaction_type: 'credit',
-      credit_type: 'signup_bonus',
-      amount: SIGNUP_CREDITS,
-      description: 'New user signup bonus'
-    });
-
-    console.log(`✓ New user ${userId} provisioned with ${SIGNUP_CREDITS} credits`);
-
     return {
       userId,
-      monthlyCredits: SIGNUP_CREDITS,
+      monthlyCredits: 50,
       topupCredits: 0,
-      totalAvailable: SIGNUP_CREDITS
+      totalAvailable: 50
     };
   }
 
