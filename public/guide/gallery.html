@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continuum — Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0d1117;
+            --bg-card: #161b22;
+            --bg-input: #21262d;
+            --border: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --accent-green: #00FF87;
+            --accent-green-dim: #3fb950;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .beta-badge {
+            display: inline-block;
+            background: #f0883e;
+            color: var(--bg-dark);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        /* Category sections */
+        .category {
+            margin-bottom: 4rem;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .category-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .category-header .platform-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            background: var(--bg-input);
+            color: var(--accent-green);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            border: 1px solid var(--border);
+        }
+
+        .category-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+        }
+
+        /* Image grid */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .image-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .image-card:hover {
+            border-color: var(--accent-green-dim);
+            transform: translateY(-2px);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .image-card .caption {
+            padding: 1rem 1.25rem;
+        }
+
+        .image-card .caption h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .image-card .caption p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .image-card .caption .meta {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .image-card .caption .meta span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+        }
+
+        .image-card .caption .meta span.platform {
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green-dim);
+        }
+
+        /* Featured/hero image */
+        .featured-image {
+            width: 100%;
+            margin-bottom: 4rem;
+        }
+
+        .featured-image img {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .featured-image .caption {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* CTA section */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .cta-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .cta-section p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--accent-green);
+            color: var(--bg-dark);
+            font-weight: 600;
+            padding: 0.875rem 2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 255, 135, 0.3);
+        }
+
+        /* Info callout */
+        .info-callout {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent-green);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 3rem;
+        }
+
+        .info-callout p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .info-callout strong {
+            color: var(--accent-green);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: var(--accent-green);
+        }
+
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .nav a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.2s ease;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            color: var(--accent-green);
+        }
+
+        /* Responsive */
+        @media (max-width: 860px) {
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- Navigation -->
+        <nav class="nav">
+            <a href="guide-index.html">Guide</a>
+            <a href="gallery.html" class="active">Gallery</a>
+            <a href="https://continuum.video" target="_blank">Sign Up →</a>
+        </nav>
+
+        <!-- Header -->
+        <header class="header">
+            <div class="beta-badge">Beta Output Gallery</div>
+            <h1>CONTINUUM</h1>
+            <p class="subtitle">Every frame on this page was generated from prompts created by Continuum and rendered through AI video platforms. No stock footage. No traditional production.</p>
+        </header>
+
+        <!-- Info callout -->
+        <div class="info-callout">
+            <p><strong>How these were made:</strong> Each image is a frame extracted from AI-generated video. User describes the shot → Continuum generates platform-optimized prompt → User renders in Veo 3, Kling, or Sora → Broadcast-ready output.</p>
+        </div>
+
+        <!-- Featured Hero -->
+        <div class="featured-image">
+            <img src="porsche_tunnel.png" alt="Porsche 911 driving through tunnel, driver visible">
+            <p class="caption">Porsche 911 tunnel tracking shot — Veo 3 — Motion-first prompt methodology</p>
+        </div>
+
+        <!-- Automotive Section -->
+        <section class="category">
+            <div class="category-header">
+                <h2>Automotive</h2>
+                <span class="platform-tag">Primary Use Case</span>
+            </div>
+            <p class="category-description">Vehicle tracking, hero shots, and urban driving sequences. The motion-first methodology was developed specifically for automotive—explicit speed directives, camera lock commands, and background motion to prevent freeze artifacts.</p>
+            
+            <div class="image-grid">
+                <div class="image-card">
+                    <img src="porschebeachcliff.png" alt="White Porsche 911 on coastal highway">
+                    <div class="caption">
+                        <h3>Coastal Tracking Shot</h3>
+                        <p>Lateral tracking maintaining consistent distance. Golden hour warmth on white paint. Ocean visible in background with gentle wave movement.</p>
+                        <div class="meta">
+                            <span class="platform">Veo 3</span>
+                            <span>7 sec</span>
+                            <span>16:9</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-card">
+                    <img src="porscheNYC.png" alt="Porsche 911 in NYC traffic with yellow taxi">
+                    <div class="caption">
+                        <h3>Urban Traffic Sequence</h3>
+                        <p>Front-facing tracking through Manhattan traffic. Surrounding vehicles, pedestrians, steam vents—complex scene with multiple motion elements.</p>
+                        <div class="meta">
+                            <span class="platform">Veo 3</span>
+                            <span>7 sec</span>
+                            <span>16:9</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-card">
+                    <img src="Kling_O1_tesla.png" alt="Tesla Model S crossing Brooklyn Bridge">
+                    <div class="caption">
+                        <h3>Iconic Location Integration</h3>
+                        <p>Tesla Model S with Brooklyn Bridge backdrop. Driver visible. Demonstrates brand isolation—separate intelligence profiles for competing automotive brands.</p>
+                        <div class="meta">
+                            <span class="platform">Kling O1</span>
+                            <span>5 sec</span>
+                            <span>16:9</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lifestyle/Product Section -->
+        <section class="category">
+            <div class="category-header">
+                <h2>Lifestyle & Product</h2>
+            </div>
+            <p class="category-description">Beyond automotive—kitchen appliances, household products, and lifestyle scenarios. Same motion-first methodology applies: explicit action directives, background movement, camera behavior specification.</p>
+            
+            <div class="image-grid">
+                <div class="image-card">
+                    <img src="cooking.png" alt="Woman cooking in kitchen with steam rising">
+                    <div class="caption">
+                        <h3>Kitchen Lifestyle</h3>
+                        <p>Golden hour light through windows. Steam rising from pots. Subject in motion—seasoning, stirring. Background details: utensils, tile backsplash, granite counters.</p>
+                        <div class="meta">
+                            <span class="platform">Veo 3</span>
+                            <span>7 sec</span>
+                            <span>16:9</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-card">
+                    <img src="Tidewoman.png" alt="Woman doing laundry with Tide detergent">
+                    <div class="caption">
+                        <h3>Product Integration</h3>
+                        <p>Laundry room scenario. Product clearly visible with accurate branding. Natural domestic lighting. Subject interacting with appliance and product simultaneously.</p>
+                        <div class="meta">
+                            <span class="platform">Veo 3</span>
+                            <span>5 sec</span>
+                            <span>16:9</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stylized/Fine Art Section -->
+        <section class="category">
+            <div class="category-header">
+                <h2>Stylized & Fine Art</h2>
+            </div>
+            <p class="category-description">Style keywords unlock non-photorealistic output. Impressionism, claymation, animation—the prompt translates creative intent into platform-specific instructions that commit the AI to a visual language.</p>
+            
+            <div class="image-grid">
+                <div class="image-card">
+                    <img src="impressionismVEO.png" alt="Van Gogh style painting with women at table">
+                    <div class="caption">
+                        <h3>Impressionist Animation</h3>
+                        <p>Van Gogh brushstroke style. Impasto texture maintained in motion. Figures gesturing, smoke rising—movement within the painting aesthetic.</p>
+                        <div class="meta">
+                            <span class="platform">Veo 3</span>
+                            <span>5 sec</span>
+                            <span>16:9</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-card">
+                    <img src="animated_paintings.png" alt="Gallery wall with animated paintings">
+                    <div class="caption">
+                        <h3>Gallery Installation</h3>
+                        <p>Museum environment with multiple animated paintings. Each frame contains distinct artwork. Camera holds steady while paintings animate independently.</p>
+                        <div class="meta">
+                            <span class="platform">Veo 3</span>
+                            <span>7 sec</span>
+                            <span>16:9</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-card">
+                    <img src="claymation-firefighters.png" alt="Claymation firefighters battling house fire">
+                    <div class="caption">
+                        <h3>Claymation Style</h3>
+                        <p>Stop-motion aesthetic with clay texture. Multiple characters, fire truck, burning building—complex action scene rendered in stylized format. Water spray dynamics maintained.</p>
+                        <div class="meta">
+                            <span class="platform">Veo 3</span>
+                            <span>7 sec</span>
+                            <span>16:9</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sports/Venue Section -->
+        <section class="category">
+            <div class="category-header">
+                <h2>Sports & Venue</h2>
+            </div>
+            <p class="category-description">Large-scale environments with crowds, stadium lighting, and coordinated action. Tests the AI's ability to handle complex scenes with many moving elements.</p>
+            
+            <div class="image-grid">
+                <div class="image-card">
+                    <img src="ballgame.png" alt="Baseball stadium at night with game in progress">
+                    <div class="caption">
+                        <h3>Stadium Night Game</h3>
+                        <p>Behind-home-plate perspective. Stadium lights, jumbotron, crowd movement. Players positioned correctly. Multiple light sources and reflections handled.</p>
+                        <div class="meta">
+                            <span class="platform">Veo 3</span>
+                            <span>7 sec</span>
+                            <span>16:9</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="cta-section">
+            <h3>Generate Your First Prompt</h3>
+            <p>Describe your shot. Get a broadcast-ready prompt optimized for your target platform.</p>
+            <a href="https://continuum.video/generate" target="_blank" class="cta-button">Open Continuum →</a>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>All footage generated via AI video platforms using Continuum prompts. No stock footage.</p>
+            <p style="margin-top: 0.5rem;"><a href="guide-index.html">Read the Beta Guide</a> · <a href="mailto:feedback@continuum.video">Send Feedback</a></p>
+        </footer>
+
+    </div>
+</body>
+</html>

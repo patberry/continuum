@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Continuum — Beta Guide</title>
+    <title>Continuum PromptMaster â€” Beta Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -293,25 +293,6 @@
             text-decoration: none;
         }
 
-        .cta-button-large {
-            display: inline-block;
-            background: var(--accent-green);
-            color: var(--bg-dark);
-            font-weight: 700;
-            font-size: 1.1rem;
-            padding: 1rem 2.5rem;
-            border-radius: 6px;
-            text-decoration: none;
-            margin-top: 1rem;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        .cta-button-large:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(63, 185, 80, 0.3);
-            text-decoration: none;
-        }
-
         /* Token explanation */
         .token-info {
             background: var(--bg-input);
@@ -325,32 +306,45 @@
             color: var(--accent-yellow);
         }
 
-        /* Signup box */
-        .signup-box {
+        /* Showcase teaser */
+        .showcase-teaser {
+            margin: 2rem 0 0 0;
             background: var(--bg-card);
-            border: 2px solid var(--accent-green);
+            border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 2rem;
-            text-align: center;
-            margin: 2rem 0;
+            overflow: hidden;
         }
 
-        .signup-box h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
+        .showcase-teaser img {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
-        .signup-box .token-highlight {
+        .showcase-teaser .teaser-caption {
+            padding: 1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .showcase-teaser .teaser-caption p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .showcase-teaser .teaser-caption a {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
+            font-size: 0.8rem;
             color: var(--accent-green);
-            margin-bottom: 1rem;
+            text-decoration: none;
         }
 
-        .signup-box p {
-            margin-bottom: 1.5rem;
+        .showcase-teaser .teaser-caption a:hover {
+            text-decoration: underline;
         }
 
         /* Footer */
@@ -367,14 +361,33 @@
             color: var(--text-secondary);
         }
 
+        /* Navigation */
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .nav a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.2s ease;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            color: var(--accent-green);
+        }
+
         /* Responsive */
         @media (max-width: 640px) {
             .header h1 {
                 font-size: 1.75rem;
-            }
-
-            .header h1 img {
-                height: 2.8rem;
             }
 
             section h2 {
@@ -389,33 +402,74 @@
 </head>
 <body>
     <div class="container">
+        
+        <!-- Navigation -->
+        <nav class="nav">
+            <a href="/guide" class="active">Guide</a>
+            <a href="/gallery">Gallery</a>
+            <a href="https://continuum.video" target="_blank">Sign Up →</a>
+        </nav>
+
         <header class="header">
             <div class="beta-badge">Beta</div>
-            <h1><img src="/continuum-logo.png" alt="Continuum" style="height: 4rem; display: block; margin: 0 auto;"></h1>
-            <p class="subtitle">Gen AI Brand Intelligence. Generate broadcast-ready video prompts that learn your brands.</p>
+            <h1>CONTINUUM PromptMaster</h1>
+            <p class="subtitle">Generate broadcast-ready video prompts with AI. This guide walks you through creating your first prompt.</p>
         </header>
 
         <section>
             <h2 data-number="1">What This Does</h2>
-            <p>Continuum transforms your shot descriptions into detailed, platform-optimized prompts for AI video generators like Google Veo 3, Kling, and Sora. It handles the technical translation so you can focus on the creative.</p>
-            <p>You describe the shot. Continuum returns a production-ready prompt with camera direction, lighting cues, and platform-specific formatting. It also analyzes your shot and recommends which AI video platform will render it best—with confidence scores and explanations.</p>
-            <p><strong>The difference:</strong> Continuum learns your brands. Each prompt makes it smarter. Porsche intelligence never touches Tesla data.</p>
+            <p>PromptMaster transforms your shot descriptions into detailed, platform-optimized prompts for AI video generators like Google Veo 3, Kling, and Sora. It handles the technical translation so you can focus on the creative.</p>
+            <p>You describe the shot. PromptMaster returns a production-ready prompt with camera direction, lighting cues, and platform-specific formatting. It also analyzes your shot and recommends which AI video platform will render it bestâ€”with confidence scores and explanations.</p>
+            
+            <div class="showcase-teaser">
+                <img src="porsche_tunnel.png" alt="AI-generated Porsche 911 driving through tunnel">
+                <div class="teaser-caption">
+                    <p>This frame was generated using a Continuum prompt → Veo 3</p>
+                    <a href="/gallery">View full gallery →</a>
+                </div>
+            </div>
         </section>
 
-        <div class="signup-box">
-            <h3>Get Started Free</h3>
-            <div class="token-highlight">250 free tokens included</div>
-            <p>Sign up with Google or email. No credit card required.</p>
-            <a href="https://continuum.video/sign-up" class="cta-button-large">Create Free Account →</a>
-        </div>
+        <section>
+            <h2 data-number="2">Get Started</h2>
+            <ol class="steps">
+                <li><strong>Go to</strong> <a href="https://continuum.video" target="_blank">continuum.video</a></li>
+                <li><strong>Sign in</strong> with Gmail or create an account with email authentication.</li>
+                <li><strong>You'll receive beta tokens</strong> to generate prompts. Generation costs 10 tokens; refinements cost 2.</li>
+            </ol>
+            <a href="https://continuum.video" target="_blank" class="cta-button" style="margin-top: 1.5rem;">Sign Up →</a>
+        </section>
 
         <section>
-            <h2 data-number="2">How It Works</h2>
+            <h2 data-number="3">Set Up Your Brand</h2>
+            <p>Brands keep your work organized and teach the AI your context. Each brand is isolatedâ€”your Porsche prompts never mix with your Tesla prompts.</p>
+            
+            <div class="screenshot-container">
+                <img src="annotated_Brand_screen.jpg" alt="Brands screen with numbered callouts">
+            </div>
+
             <ol class="steps">
-                <li><strong>Create a brand profile</strong> — Add context about your brand (style, tone, visual rules). Each brand is isolated.</li>
-                <li><strong>Describe your shot</strong> — Be specific about action, camera, and style.</li>
-                <li><strong>Get platform recommendations</strong> — Continuum analyzes your shot and ranks which AI platforms will handle it best.</li>
-                <li><strong>Generate your prompt</strong> — One click. Takes ~10 seconds. Copy and paste into Veo 3, Kling, Sora, etc.</li>
+                <li><strong>Click "Brands"</strong> in the top navigation.</li>
+                <li><strong>Click "+ CREATE NEW BRAND"</strong> to add a new brand.</li>
+                <li><strong>Add a description</strong> â€” this context informs how prompts are written. Be specific: "High-end kitchen appliances, premium aesthetic, stainless steel focus" beats "appliances."</li>
+            </ol>
+            <p>You'll select your brand on the Generate screen when creating prompts. Use "None" for non-brand-specific work.</p>
+        </section>
+
+        <section>
+            <h2 data-number="4">Generate Your First Prompt</h2>
+            
+            <div class="screenshot-container">
+                <img src="annotated_Generate_screen.jpg" alt="Generate screen with numbered callouts">
+            </div>
+
+            <ol class="steps">
+                <li><strong>Select Brand</strong> â€” Choose from your saved brands or "None."</li>
+                <li><strong>Describe your shot</strong> â€” Be specific about action, camera, and style. Example: <code>Red 911 headed South on PCH during Golden Hour. Camera is tracking next to car during entire clip. Vehicle moves screen right to screen left. Driver in car wearing sunglasses. Aspect ratio 16:9.</code></li>
+                <li><strong>Review Platform Recommendations</strong> â€” PromptMaster analyzes your shot and ranks which AI video platforms will handle it best. You'll see confidence percentages and explanations (e.g., "Best for motion-heavy automotive shots").</li>
+                <li><strong>Choose Target Platform</strong> â€” Accept the top recommendation or override based on your preference or subscription access.</li>
+                <li><strong>Set Clip Duration</strong> â€” 7 seconds is standard for commercial shots.</li>
+                <li><strong>Click "Generate Prompt"</strong> â€” Takes ~10 seconds.</li>
             </ol>
 
             <div class="token-info">
@@ -424,26 +478,27 @@
         </section>
 
         <section>
-            <h2 data-number="3">The Interface</h2>
+            <h2 data-number="5">Use Your Generated Prompt</h2>
             
-            <p><strong>Brands screen</strong> — Create and manage your brand profiles. Each is completely isolated.</p>
-            <div class="screenshot-container">
-                <img src="annotated_Brand_screen.jpg" alt="Brands screen with numbered callouts">
-            </div>
-
-            <p style="margin-top: 2rem;"><strong>Generate screen</strong> — Describe your shot, get platform recommendations, generate your prompt.</p>
-            <div class="screenshot-container">
-                <img src="annotated_Generate_screen.jpg" alt="Generate screen with numbered callouts">
-            </div>
-            
-            <p style="margin-top: 2rem;"><strong>Generated prompt</strong> — Copy the optimized prompt and paste it into your AI video platform.</p>
             <div class="screenshot-container">
                 <img src="annotated_generated_prompt_screen.jpg" alt="Generated prompt output with Copy button">
+            </div>
+
+            <p>After generation, you'll see a detailed prompt optimized for your target platform:</p>
+
+            <ol class="steps" style="counter-reset: step-counter 6;">
+                <li><strong>Copy your prompt</strong> â€” Click "Copy" to grab the full generated prompt, then paste it into your video AI platform (Veo 3, Kling, Sora, etc.) and render your video.</li>
+            </ol>
+            
+            <p style="margin-top: 1.5rem;"><strong>Not quite right?</strong> Adjust your shot description and click "Refine Prompt" (2 tokens) to iterate without starting over.</p>
+
+            <div class="token-info">
+                <strong>Agent learning:</strong> Each prompt you generate teaches PromptMaster about your brand. The "Agent learning activated" message means your next prompt for that brand will be informed by this one.
             </div>
         </section>
 
         <section>
-            <h2 data-number="4">Tips for Better Results</h2>
+            <h2 data-number="6">Tips for Better Results</h2>
             <div class="tip-grid">
                 <div class="tip">
                     <div class="tip-title">Trust the platform recommendations</div>
@@ -451,7 +506,7 @@
                 </div>
                 <div class="tip">
                     <div class="tip-title">Be specific about vehicles</div>
-                    <p class="tip-text">If there's a car, request a driver. AI video often renders empty cars that look wrong. Same for boats, planes—anything that should be operated.</p>
+                    <p class="tip-text">If there's a car, request a driver. AI video often renders empty cars that look wrong. Same for boats, planesâ€”anything that should be operated.</p>
                 </div>
                 <div class="tip">
                     <div class="tip-title">Include camera direction</div>
@@ -463,18 +518,18 @@
                 </div>
                 <div class="tip">
                     <div class="tip-title">Add style references</div>
-                    <p class="tip-text">Film noir, claymation, anime, documentary, 70mm cinematic, VHS aesthetic—style keywords help the AI commit to a look.</p>
+                    <p class="tip-text">Film noir, claymation, anime, documentary, 70mm cinematic, VHS aestheticâ€”style keywords help the AI commit to a look.</p>
                 </div>
                 <div class="tip">
-                    <div class="tip-title">How to refine your prompt</div>
-                    <p class="tip-text"><strong>Don't start over—refine instead:</strong> After generating a prompt, go back to your original shot description field and edit it. Add more keywords, camera angles, lighting cues, or style direction. Then click "Refine Prompt" (2 tokens). PromptMaster will generate an improved version that builds on your original prompt with your new additions.</p>
+                    <div class="tip-title">Iterate with refinements</div>
+                    <p class="tip-text">Use "Refine Prompt" (2 tokens) to adjust without starting over. Tweak your description and resubmit.</p>
                 </div>
             </div>
         </section>
 
         <section>
-            <h2 data-number="5">Current Limitations</h2>
-            <p>Continuum generates prompts—the final video quality depends on the AI video platform you use. Here's what to expect:</p>
+            <h2 data-number="7">Current Limitations</h2>
+            <p>PromptMaster generates promptsâ€”the final video quality depends on the AI video platform you use. Here's what to expect:</p>
             
             <div class="limitation">
                 <div class="limitation-title">Fingers and hands</div>
@@ -497,19 +552,18 @@
             </div>
         </section>
 
-        <div class="signup-box">
-            <h3>Ready to try it?</h3>
-            <div class="token-highlight">250 free tokens • No credit card</div>
-            <a href="https://continuum.video/sign-up" class="cta-button-large">Create Free Account →</a>
-        </div>
-
         <section>
-            <h2 data-number="6">Send Feedback</h2>
+            <h2 data-number="8">Send Feedback</h2>
             <p>This is a beta. We want to know what's working, what's broken, and what's missing.</p>
             <div class="card">
                 <h3>Report issues or suggestions</h3>
-                <p style="margin-bottom: 0;">Email: <a href="/cdn-cgi/l/email-protection#e88e8d8d8c8a898b83a88b87869c81869d9d85c69e818c8d87"><span class="__cf_email__" data-cfemail="26404343424447454d66454948524f4853534b08504f424349">[email&#160;protected]</span></a></p>
+                <p style="margin-bottom: 0;">Email: <a href="mailto:feedback@continuum.video">feedback@continuum.video</a></p>
             </div>
         </section>
 
-      
+        <footer class="footer">
+            <p>Continuum PromptMaster Beta â€” Built by <a href="#">Continuum Media Works, LLC</a></p>
+        </footer>
+    </div>
+</body>
+</html>
