@@ -347,30 +347,37 @@ export default function GeneratePage() {
             className="h-10 cursor-pointer hover:opacity-80 transition-opacity"
           />
         </a>
-        <nav className="flex items-center gap-6">
-          <a 
-            href="/generate" 
-            className="text-[#00FF87] font-semibold text-sm transition-colors"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
-          >
-            Generate
-          </a>
-          <a 
-            href="/dashboard/brands" 
-            className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
-          >
-            Brands
-          </a>
-          <a 
-            href="/about" 
-            className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
-          >
-            About
-          </a>
-          <UserButton afterSignOutUrl="/" />
-        </nav>
+       <nav className="flex items-center gap-6">
+  <a 
+    href="/generate" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+  >
+    Generate
+  </a>
+  <a 
+    href="/dashboard/brands" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+  >
+    Brands
+  </a>
+  <a 
+    href="/guide" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+  >
+    Guide
+  </a>
+  <a 
+    href="/about" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+  >
+    About
+  </a>
+  <UserButton afterSignOutUrl="/" />
+</nav>
       </header>
 
       {/* Main Content - with top padding for fixed header */}

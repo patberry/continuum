@@ -44,7 +44,14 @@ export default function AboutPage() {
                 className="text-[#00FF87] text-base"
                 style={{ fontFamily: 'JetBrains Mono, monospace' }}
               >
-                About
+ Guide
+  </a>
+  <a 
+    href="/Guide" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+              >  
+		About
               </a>
               {/* Clerk User Button with Avatar */}
               <UserButton 

@@ -112,29 +112,36 @@ export default function BrandsPage() {
             />
           </a>
           <nav className="flex items-center gap-6">
-            <a 
-              href="/generate" 
-              className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
-              style={{ fontFamily: 'JetBrains Mono, monospace' }}
-            >
-              Generate
-            </a>
-            <a 
-              href="/dashboard/brands" 
-              className="text-[#00FF87] font-semibold text-sm transition-colors"
-              style={{ fontFamily: 'JetBrains Mono, monospace' }}
-            >
-              Brands
-            </a>
-            <a 
-              href="/about" 
-              className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
-              style={{ fontFamily: 'JetBrains Mono, monospace' }}
-            >
-              About
-            </a>
-            <UserButton afterSignOutUrl="/" />
-          </nav>
+  <a 
+    href="/generate" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+  >
+    Generate
+  </a>
+  <a 
+    href="/dashboard/brands" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+  >
+    Brands
+  </a>
+  <a 
+    href="/guide" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+  >
+    Guide
+  </a>
+  <a 
+    href="/about" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+  >
+    About
+  </a>
+  <UserButton afterSignOutUrl="/" />
+</nav>
         </header>
         <div className="max-w-4xl mx-auto p-8 pt-24">
           <p className="text-gray-400">Loading brands...</p>
