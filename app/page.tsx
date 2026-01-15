@@ -61,10 +61,50 @@ export default function Home() {
           letterSpacing: '2px',
           textTransform: 'uppercase',
           margin: 0,
-          marginBottom: '48px',
+          marginBottom: '32px',
         }}
       >
         GEN AI BRAND INTELLIGENCE
+      </p>
+
+      {/* Showreel Video */}
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '800px',
+          marginBottom: '32px',
+          borderRadius: '8px',
+          overflow: 'hidden',
+          border: '1px solid #333',
+          boxShadow: '0 4px 24px rgba(0, 255, 135, 0.15)',
+        }}
+      >
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{
+            width: '100%',
+            display: 'block',
+          }}
+        >
+          <source src="/gallery/Continuum_show_reel.mp4" type="video/mp4" />
+        </video>
+      </div>
+
+      {/* Subtext */}
+      <p
+        style={{
+          color: '#666',
+          fontFamily: 'JetBrains Mono, monospace',
+          fontSize: '12px',
+          letterSpacing: '1px',
+          margin: 0,
+          marginBottom: '32px',
+        }}
+      >
+        MADE WITH CONTINUUM PROMPTS
       </p>
       
       {/* CTA Button - only shows after 3 sec AND not signed in */}
