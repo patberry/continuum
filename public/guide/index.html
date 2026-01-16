@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Continuum PromptMaster — Beta Guide</title>
+    <title>Continuum — Beta Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0d1117;
-            --bg-card: #161b22;
-            --bg-input: #21262d;
-            --border: #30363d;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --accent-green: #3fb950;
+            --bg-dark: #000000;
+            --bg-card: #111111;
+            --bg-input: #1a1a1a;
+            --border: #333333;
+            --text-primary: #ffffff;
+            --text-secondary: #999999;
+            --accent-green: #00FF87;
             --accent-orange: #f0883e;
             --accent-red: #f85149;
             --accent-yellow: #d29922;
@@ -35,10 +35,68 @@
             min-height: 100vh;
         }
 
+        /* Global Navigation - matches app style */
+        .global-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-dark);
+            border-bottom: 1px solid var(--border);
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .global-nav .logo {
+            height: 40px;
+        }
+
+        .global-nav .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .global-nav .nav-links a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .global-nav .nav-links a:hover {
+            color: var(--accent-green);
+        }
+
+        .global-nav .nav-links a.active {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .global-nav .sign-in-btn {
+            background: var(--accent-green);
+            color: var(--bg-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .global-nav .sign-in-btn:hover {
+            background: #00DD75;
+            color: var(--bg-dark);
+        }
+
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 3rem 1.5rem;
+            padding: 6rem 1.5rem 3rem;
         }
 
         /* Header */
@@ -50,6 +108,7 @@
         }
 
         .header h1 {
+            font-family: 'JetBrains Mono', monospace;
             font-size: 2.5rem;
             font-weight: 700;
             color: var(--accent-green);
@@ -142,30 +201,36 @@
             display: block;
         }
 
-        .screenshot-placeholder {
-            background: var(--bg-input);
-            padding: 4rem 2rem;
-            text-align: center;
-            color: var(--text-secondary);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.875rem;
+        /* Showcase teaser */
+        .showcase-teaser {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1.5rem 0;
         }
 
-        /* Callout overlays */
-        .callout {
-            position: absolute;
+        .showcase-teaser img {
+            width: 100%;
+            display: block;
+        }
+
+        .teaser-caption {
+            padding: 1rem 1.25rem;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 28px;
-            background: var(--accent-green);
-            color: var(--bg-dark);
-            font-weight: 700;
+        }
+
+        .teaser-caption p {
+            margin: 0;
             font-size: 0.875rem;
-            border-radius: 50%;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-            z-index: 10;
+            color: var(--text-secondary);
+        }
+
+        .teaser-caption a {
+            color: var(--accent-green);
+            font-size: 0.875rem;
         }
 
         /* Step list */
@@ -279,6 +344,7 @@
             display: inline-block;
             background: var(--accent-green);
             color: var(--bg-dark);
+            font-family: 'JetBrains Mono', monospace;
             font-weight: 600;
             padding: 0.875rem 2rem;
             border-radius: 6px;
@@ -289,7 +355,7 @@
 
         .cta-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(63, 185, 80, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 255, 135, 0.3);
             text-decoration: none;
         }
 
@@ -306,47 +372,6 @@
             color: var(--accent-yellow);
         }
 
-        /* Showcase teaser */
-        .showcase-teaser {
-            margin: 2rem 0 0 0;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .showcase-teaser img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .showcase-teaser .teaser-caption {
-            padding: 1rem 1.25rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-
-        .showcase-teaser .teaser-caption p {
-            margin: 0;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .showcase-teaser .teaser-caption a {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--accent-green);
-            text-decoration: none;
-        }
-
-        .showcase-teaser .teaser-caption a:hover {
-            text-decoration: underline;
-        }
-
         /* Footer */
         .footer {
             margin-top: 4rem;
@@ -361,31 +386,24 @@
             color: var(--text-secondary);
         }
 
-        /* Navigation */
-        .nav {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .nav a {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: color 0.2s ease;
-        }
-
-        .nav a:hover,
-        .nav a.active {
-            color: var(--accent-green);
-        }
-
         /* Responsive */
         @media (max-width: 640px) {
+            .global-nav {
+                padding: 1rem;
+            }
+
+            .global-nav .logo {
+                height: 32px;
+            }
+
+            .global-nav .nav-links {
+                gap: 1rem;
+            }
+
+            .global-nav .nav-links a {
+                font-size: 0.75rem;
+            }
+
             .header h1 {
                 font-size: 1.75rem;
             }
@@ -395,31 +413,37 @@
             }
 
             .container {
-                padding: 2rem 1rem;
+                padding: 5rem 1rem 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        
-        <!-- Navigation -->
-        <nav class="nav">
+    <!-- Global Navigation -->
+    <nav class="global-nav">
+        <a href="/generate">
+            <img src="/continuum-logo.png" alt="Continuum" class="logo">
+        </a>
+        <div class="nav-links">
+            <a href="/generate">Generate</a>
+            <a href="/dashboard/brands">Brands</a>
             <a href="/guide" class="active">Guide</a>
-            <a href="/gallery">Gallery</a>
-            <a href="https://continuum.video" target="_blank">Sign Up →</a>
-        </nav>
+            <a href="/about">About</a>
+            <a href="/" class="sign-in-btn">Sign In</a>
+        </div>
+    </nav>
 
+    <div class="container">
         <header class="header">
             <div class="beta-badge">Beta</div>
-            <h1>CONTINUUM PromptMaster</h1>
+            <h1>CONTINUUM Guide</h1>
             <p class="subtitle">Generate broadcast-ready video prompts with AI. This guide walks you through creating your first prompt.</p>
         </header>
 
         <section>
             <h2 data-number="1">What This Does</h2>
-            <p>PromptMaster transforms your shot descriptions into detailed, platform-optimized prompts for AI video generators like Google Veo 3, Kling, and Sora. It handles the technical translation so you can focus on the creative.</p>
-            <p>You describe the shot. PromptMaster returns a production-ready prompt with camera direction, lighting cues, and platform-specific formatting. It also analyzes your shot and recommends which AI video platform will render it best—with confidence scores and explanations.</p>
+            <p>Continuum transforms your shot descriptions into detailed, platform-optimized prompts for AI video generators like Google Veo 3, Kling, and Sora. It handles the technical translation so you can focus on the creative.</p>
+            <p>You describe the shot. Continuum returns a production-ready prompt with camera direction, lighting cues, and platform-specific formatting. It also analyzes your shot and recommends which AI video platform will render it best—with confidence scores and explanations.</p>
             
             <div class="showcase-teaser">
                 <img src="porsche_tunnel.png" alt="AI-generated Porsche 911 driving through tunnel">
@@ -466,7 +490,7 @@
             <ol class="steps">
                 <li><strong>Select Brand</strong> — Choose from your saved brands or "None."</li>
                 <li><strong>Describe your shot</strong> — Be specific about action, camera, and style. Example: <code>Red 911 headed South on PCH during Golden Hour. Camera is tracking next to car during entire clip. Vehicle moves screen right to screen left. Driver in car wearing sunglasses. Aspect ratio 16:9.</code></li>
-                <li><strong>Review Platform Recommendations</strong> — PromptMaster analyzes your shot and ranks which AI video platforms will handle it best. You'll see confidence percentages and explanations (e.g., "Best for motion-heavy automotive shots").</li>
+                <li><strong>Review Platform Recommendations</strong> — Continuum analyzes your shot and ranks which AI video platforms will handle it best. You'll see confidence percentages and explanations (e.g., "Best for motion-heavy automotive shots").</li>
                 <li><strong>Choose Target Platform</strong> — Accept the top recommendation or override based on your preference or subscription access.</li>
                 <li><strong>Set Clip Duration</strong> — 7 seconds is standard for commercial shots.</li>
                 <li><strong>Click "Generate Prompt"</strong> — Takes ~10 seconds.</li>
@@ -493,7 +517,7 @@
             <p style="margin-top: 1.5rem;"><strong>Not quite right?</strong> Update your shot description with what you want changed, then click "Refine Prompt" to iterate.</p>
 
             <div class="token-info">
-                <strong>Agent learning:</strong> Each prompt you generate teaches PromptMaster about your brand. The "Agent learning activated" message means your next prompt for that brand will be informed by this one.
+                <strong>Agent learning:</strong> Each prompt you generate teaches Continuum about your brand. The "Agent learning activated" message means your next prompt for that brand will be informed by this one.
             </div>
         </section>
 
@@ -529,7 +553,7 @@
 
         <section>
             <h2 data-number="7">Current Limitations</h2>
-            <p>PromptMaster generates prompts—the final video quality depends on the AI video platform you use. Here's what to expect:</p>
+            <p>Continuum generates prompts—the final video quality depends on the AI video platform you use. Here's what to expect:</p>
             
             <div class="limitation">
                 <div class="limitation-title">Fingers and hands</div>
@@ -557,9 +581,13 @@
             <p>This is a beta. We want to know what's working, what's broken, and what's missing.</p>
             <div class="card">
                 <h3>Report issues or suggestions</h3>
-                <p style="margin-bottom: 0;">Email: <a href="/cdn-cgi/l/email-protection#44222121202625272f04272b2a302d2a3131296a322d20212b"><span class="__cf_email__" data-cfemail="97f1f2f2f3f5f6f4fcd7f4f8f9e3fef9e2e2fab9e1fef3f2f8">[email&#160;protected]</span></a></p>
+                <p style="margin-bottom: 0;">Email: <a href="mailto:feedback@continuum.video">feedback@continuum.video</a></p>
             </div>
         </section>
 
         <footer class="footer">
-        
+            <p>Continuum Beta — Built by Continuum Media Works, LLC</p>
+        </footer>
+    </div>
+</body>
+</html>

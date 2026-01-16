@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { UserButton } from '@clerk/nextjs';
 
 // Platform configuration with character limits
@@ -30,6 +31,9 @@ const CLIP_DURATIONS = [
 ];
 
 export default function GeneratePage() {
+  // Get URL search params for brand pre-selection
+  const searchParams = useSearchParams();
+  
   // State
   const [brands, setBrands] = useState<any[]>([]);
   const [selectedBrand, setSelectedBrand] = useState('');
@@ -45,14 +49,6 @@ export default function GeneratePage() {
   const [platformRecommendations, setPlatformRecommendations] = useState<any[]>([]);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  
-  // ============================================
-  // FEEDBACK SYSTEM STATE (RESTORED)
-  // ============================================
-  const [currentPromptId, setCurrentPromptId] = useState<string | null>(null);
-  const [showFeedbackUI, setShowFeedbackUI] = useState(false);
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
-  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   // Calculate platform recommendations based on shot description
   const calculatePlatformRecommendations = (description: string) => {
@@ -156,10 +152,10 @@ export default function GeneratePage() {
     }
   }, [shotDescription]);
 
-  // Load brands
+  // Load brands (with URL param support for pre-selection)
   useEffect(() => {
     fetchBrands();
-  }, []);
+  }, [searchParams]);
 
   // Load credits from API
   useEffect(() => {
@@ -184,7 +180,13 @@ export default function GeneratePage() {
       
       if (Array.isArray(brandsArray)) {
         setBrands(brandsArray);
-        if (brandsArray.length > 0) {
+        
+        // Check for brand query param first (from Brands page click)
+        const brandFromUrl = searchParams.get('brand');
+        if (brandFromUrl && brandsArray.some((b: any) => b.brand_id === brandFromUrl)) {
+          setSelectedBrand(brandFromUrl);
+        } else if (brandsArray.length > 0) {
+          // Fallback to first brand if no query param
           setSelectedBrand(brandsArray[0].brand_id);
         }
       } else {
@@ -218,10 +220,6 @@ export default function GeneratePage() {
     setIsGenerating(true);
     setError('');
     setSuccessMessage('');
-    // Reset feedback state for new generation
-    setShowFeedbackUI(false);
-    setFeedbackSubmitted(false);
-    setCurrentPromptId(null);
 
     try {
       const response = await fetch('/api/generate-prompt', {
@@ -243,17 +241,6 @@ export default function GeneratePage() {
       const data = await response.json();
       setGeneratedPrompt(data.prompt);
       setLastGeneratedPrompt(data.prompt);
-      
-      // ============================================
-      // CAPTURE PROMPT ID FOR FEEDBACK (CRITICAL)
-      // ============================================
-      if (data.promptId) {
-        setCurrentPromptId(data.promptId);
-        console.log('Prompt ID captured for feedback:', data.promptId);
-      } else {
-        console.warn('No promptId returned from API - feedback will not work');
-      }
-      
       setCredits(prev => prev !== null ? prev - 10 : prev);
       setSuccessMessage('Prompt generated! (10 tokens)');
 
@@ -274,9 +261,6 @@ export default function GeneratePage() {
     setIsRefining(true);
     setError('');
     setSuccessMessage('');
-    // Reset feedback for refined prompt
-    setShowFeedbackUI(false);
-    setFeedbackSubmitted(false);
 
     try {
       const response = await fetch('/api/refine-prompt', {
@@ -295,12 +279,6 @@ export default function GeneratePage() {
       const data = await response.json();
       setGeneratedPrompt(data.refinedPrompt);
       setLastGeneratedPrompt(data.refinedPrompt);
-      
-      // Capture new promptId if returned
-      if (data.promptId) {
-        setCurrentPromptId(data.promptId);
-      }
-      
       setCredits(prev => prev !== null ? prev - 2 : prev);
       setSuccessMessage('Prompt refined! (2 tokens)');
 
@@ -312,66 +290,10 @@ export default function GeneratePage() {
     }
   };
 
-  // ============================================
-  // COPY TO CLIPBOARD - TRIGGERS FEEDBACK UI
-  // ============================================
   const copyToClipboard = () => {
     navigator.clipboard.writeText(generatedPrompt);
     setSuccessMessage('Copied to clipboard!');
-    
-    // Show feedback UI after copy if we have a promptId and haven't submitted yet
-    if (currentPromptId && !feedbackSubmitted) {
-      setShowFeedbackUI(true);
-    }
-    
     setTimeout(() => setSuccessMessage(''), 2000);
-  };
-
-  // ============================================
-  // FEEDBACK SUBMISSION HANDLER (RESTORED)
-  // ============================================
-  const handleFeedback = async (rating: 'great' | 'good' | 'bad') => {
-    if (!currentPromptId) {
-      console.error('No promptId available for feedback');
-      setError('Unable to submit feedback - no prompt ID');
-      return;
-    }
-
-    setIsSubmittingFeedback(true);
-
-    try {
-      const response = await fetch('/api/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          promptId: currentPromptId,
-          rating: rating,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to submit feedback');
-      }
-
-      setFeedbackSubmitted(true);
-      setShowFeedbackUI(false);
-      
-      // Show thank you message
-      const messages: Record<string, string> = {
-        'great': '🎯 Thanks! Continuum will remember what works.',
-        'good': '👍 Got it. Refining the patterns.',
-        'bad': '📝 Noted. Will adjust for next time.'
-      };
-      setSuccessMessage(messages[rating]);
-      setTimeout(() => setSuccessMessage(''), 3000);
-
-    } catch (error: any) {
-      console.error('Feedback error:', error);
-      setError(error.message || 'Failed to submit feedback');
-    } finally {
-      setIsSubmittingFeedback(false);
-    }
   };
 
   const formatTime = (seconds: number) => {
@@ -425,30 +347,37 @@ export default function GeneratePage() {
             className="h-10 cursor-pointer hover:opacity-80 transition-opacity"
           />
         </a>
-        <nav className="flex items-center gap-6">
-          <a 
-            href="/generate" 
-            className="text-[#00FF87] font-semibold text-sm transition-colors"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
-          >
-            Generate
-          </a>
-          <a 
-            href="/dashboard/brands" 
-            className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
-          >
-            Brands
-          </a>
-          <a 
-            href="/about" 
-            className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}
-          >
-            About
-          </a>
-          <UserButton afterSignOutUrl="/" />
-        </nav>
+       <nav className="flex items-center gap-6">
+  <a 
+    href="/generate" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+  >
+    Generate
+  </a>
+  <a 
+    href="/dashboard/brands" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+  >
+    Brands
+  </a>
+  <a 
+    href="/guide" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+  >
+    Guide
+  </a>
+  <a 
+    href="/about" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+  >
+    About
+  </a>
+  <UserButton afterSignOutUrl="/" />
+</nav>
       </header>
 
       {/* Main Content - with top padding for fixed header */}
@@ -727,64 +656,11 @@ export default function GeneratePage() {
                   {generatedPrompt}
                 </p>
               </div>
-              
-              {/* ============================================ */}
-              {/* FEEDBACK UI (RESTORED) */}
-              {/* ============================================ */}
-              {showFeedbackUI && !feedbackSubmitted && (
-                <div className="mt-4 bg-yellow-900/20 border border-yellow-500/50 p-4 rounded">
-                  <p className="text-yellow-400 text-sm font-semibold mb-3" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
-                    🧠 How did the result turn out?
-                  </p>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => handleFeedback('great')}
-                      disabled={isSubmittingFeedback}
-                      className="flex-1 py-2 px-4 rounded bg-green-600 hover:bg-green-500 text-white font-bold text-sm transition-colors disabled:opacity-50"
-                      style={{ fontFamily: 'JetBrains Mono, monospace' }}
-                    >
-                      🎯 GREAT
-                    </button>
-                    <button
-                      onClick={() => handleFeedback('good')}
-                      disabled={isSubmittingFeedback}
-                      className="flex-1 py-2 px-4 rounded bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-colors disabled:opacity-50"
-                      style={{ fontFamily: 'JetBrains Mono, monospace' }}
-                    >
-                      👍 GOOD
-                    </button>
-                    <button
-                      onClick={() => handleFeedback('bad')}
-                      disabled={isSubmittingFeedback}
-                      className="flex-1 py-2 px-4 rounded bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition-colors disabled:opacity-50"
-                      style={{ fontFamily: 'JetBrains Mono, monospace' }}
-                    >
-                      👎 BAD
-                    </button>
-                  </div>
-                  <p className="text-gray-500 text-xs mt-2 italic">
-                    Your feedback teaches Continuum what works for this brand
-                  </p>
-                </div>
-              )}
-              
-              {/* Feedback submitted confirmation */}
-              {feedbackSubmitted && (
-                <div className="mt-4 bg-[#00FF87]/10 border border-[#00FF87]/30 p-3 rounded">
-                  <p className="text-[#00FF87] text-sm">
-                    ✓ Feedback recorded. Continuum is learning.
-                  </p>
-                </div>
-              )}
-              
-              {/* Default learning message (when no feedback UI shown) */}
-              {!showFeedbackUI && !feedbackSubmitted && (
-                <div className="mt-4 bg-[#00FF87]/10 border border-[#00FF87]/30 p-3 rounded">
-                  <p className="text-[#00FF87] text-sm">
-                    ✓ Agent learning activated. Copy prompt and rate results to make future prompts smarter.
-                  </p>
-                </div>
-              )}
+              <div className="mt-4 bg-[#00FF87]/10 border border-[#00FF87]/30 p-3 rounded">
+                <p className="text-[#00FF87] text-sm">
+                  ✓ Agent learning activated. Your next prompt for this brand will be smarter.
+                </p>
+              </div>
             </div>
           )}
 

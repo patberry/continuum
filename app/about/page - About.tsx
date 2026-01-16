@@ -1,5 +1,4 @@
-// app/about/page.tsx
-import NavBar from '../components/NavBar';
+import { UserButton } from '@clerk/nextjs';
 import { Inter } from 'next/font/google';
 
 const inter = Inter({
@@ -11,11 +10,65 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-black">
       
-      {/* Navigation */}
-      <NavBar activePage="about" />
+      {/* Header - Matching All Pages */}
+      <div className="border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-8 py-6">
+          <div className="flex items-center justify-between">
+            {/* Logo - Bigger size */}
+            <a href="/dashboard/brands" className="hover:opacity-80 transition-opacity">
+              <img 
+                src="/continuum-logo.png" 
+                alt="CONTINUUM" 
+                className="h-16"
+              />
+            </a>
+
+            {/* Navigation + User */}
+            <div className="flex items-center gap-8">
+              <a 
+                href="/generate"
+                className="text-gray-400 hover:text-white transition-colors text-base"
+                style={{ fontFamily: 'JetBrains Mono, monospace' }}
+              >
+                Generate
+              </a>
+              <a 
+                href="/dashboard/brands"
+                className="text-gray-400 hover:text-white transition-colors text-base"
+                style={{ fontFamily: 'JetBrains Mono, monospace' }}
+              >
+                Brands
+              </a>
+              <a 
+                href="/about"
+                className="text-[#00FF87] text-base"
+                style={{ fontFamily: 'JetBrains Mono, monospace' }}
+              >
+ Guide
+  </a>
+  <a 
+    href="/Guide" 
+    className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+              >  
+		About
+              </a>
+              {/* Clerk User Button with Avatar */}
+              <UserButton 
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: {
+                    avatarBox: "w-10 h-10"
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Main Content */}
-      <div className={`max-w-5xl mx-auto px-8 pt-28 pb-0 ${inter.className}`}>
+      <div className={`max-w-5xl mx-auto px-8 pt-20 pb-0 ${inter.className}`}>
         
         {/* Hero Section */}
         <div className="mb-16">
