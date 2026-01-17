@@ -440,6 +440,13 @@ export default function GeneratePage() {
           >
             Brands
           </a>
+            <a 
+            href="/guide" 
+            className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
+            style={{ fontFamily: 'JetBrains Mono, monospace' }}
+          >
+            Guide
+        </a>
           <a 
             href="/about" 
             className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
