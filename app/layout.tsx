@@ -1,6 +1,7 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import './globals.css';
 import Footer from './components/Footer';
+import FeedbackSidebar from './components/FeedbackSidebar';
 
 export const metadata = {
   title: 'Continuum',
@@ -152,6 +153,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           `}} />
         </head>
         <body className="bg-black min-h-screen flex flex-col">
+          <FeedbackSidebar />
           <div className="flex-1">
             {children}
           </div>
