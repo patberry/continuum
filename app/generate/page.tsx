@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { UserButton } from '@clerk/nextjs';
-import FeedbackPrompt from './components/FeedbackPrompt';
-
+import FeedbackPrompt from '../components/FeedbackPrompt';
 
 // Platform configuration with character limits
 const PLATFORMS = [
@@ -15,7 +14,6 @@ const PLATFORMS = [
   { value: 'runway', label: 'Runway Gen-3', type: 'video', charLimit: 3500 },
   { value: 'seedance', label: 'Seedance 1.0 Pro', type: 'video', charLimit: 3000 },
   { value: 'pika', label: 'Pika', type: 'video', charLimit: 2000 },
-  { value: 'freepik', label: 'Freepik', type: 'video', charLimit: 2500 },
   
   // Image Platforms
   { value: 'midjourney', label: 'Midjourney', type: 'image', charLimit: 2000 },
@@ -32,7 +30,7 @@ const CLIP_DURATIONS = [
 ];
 
 export default function GeneratePage() {
-  // State
+  // Core State
   const [brands, setBrands] = useState<any[]>([]);
   const [selectedBrand, setSelectedBrand] = useState('');
   const [selectedPlatform, setSelectedPlatform] = useState('veo3');
@@ -47,18 +45,11 @@ export default function GeneratePage() {
   const [platformRecommendations, setPlatformRecommendations] = useState<any[]>([]);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
+  // Feedback State
   const [currentPromptId, setCurrentPromptId] = useState<string | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [pendingFeedbackPrompt, setPendingFeedbackPrompt] = useState<string>('');
-
-  
-  // ============================================
-  // FEEDBACK SYSTEM STATE (RESTORED)
-  // ============================================
-  const [currentPromptId, setCurrentPromptId] = useState<string | null>(null);
-  const [showFeedbackUI, setShowFeedbackUI] = useState(false);
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
-  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   // Calculate platform recommendations based on shot description
   const calculatePlatformRecommendations = (description: string) => {
@@ -224,9 +215,7 @@ export default function GeneratePage() {
     setIsGenerating(true);
     setError('');
     setSuccessMessage('');
-    // Reset feedback state for new generation
-    setShowFeedbackUI(false);
-    setFeedbackSubmitted(false);
+    setShowFeedback(false);
     setCurrentPromptId(null);
 
     try {
@@ -249,13 +238,8 @@ export default function GeneratePage() {
       const data = await response.json();
       setGeneratedPrompt(data.prompt);
       setLastGeneratedPrompt(data.prompt);
-      setCurrentPromptId(data.promptId);  // <-- ADD THIS LINE
-      setCredits(prev => prev !== null ? prev - 10 : prev);
-      setSuccessMessage('Prompt generated! (10 tokens)');
       
-      // ============================================
-      // CAPTURE PROMPT ID FOR FEEDBACK (CRITICAL)
-      // ============================================
+      // Capture prompt ID for feedback
       if (data.promptId) {
         setCurrentPromptId(data.promptId);
         console.log('Prompt ID captured for feedback:', data.promptId);
@@ -283,9 +267,7 @@ export default function GeneratePage() {
     setIsRefining(true);
     setError('');
     setSuccessMessage('');
-    // Reset feedback for refined prompt
-    setShowFeedbackUI(false);
-    setFeedbackSubmitted(false);
+    setShowFeedback(false);
 
     try {
       const response = await fetch('/api/refine-prompt', {
@@ -324,102 +306,56 @@ export default function GeneratePage() {
   // ============================================
   // COPY TO CLIPBOARD - TRIGGERS FEEDBACK UI
   // ============================================
-const copyToClipboard = () => {
-  navigator.clipboard.writeText(generatedPrompt);
-  setSuccessMessage('Copied to clipboard!');
-  setTimeout(() => setSuccessMessage(''), 2000);
-  
-  // Trigger feedback prompt after a short delay
-  if (currentPromptId) {
-    setPendingFeedbackPrompt(generatedPrompt);
-    setTimeout(() => {
-      setShowFeedback(true);
-    }, 1500);
-  }
-};
-
-  // ============================================
-  // FEEDBACK SUBMISSION HANDLER (RESTORED)
-  // ============================================
-  const handleFeedback = async (rating: 'great' | 'good' | 'bad') => {
-    if (!currentPromptId) {
-      console.error('No promptId available for feedback');
-      setError('Unable to submit feedback - no prompt ID');
-  
-const handleFeedbackSubmit = async (rating: string, notes: string) => {
-  if (!currentPromptId) return;
-  
-  try {
-    const response = await fetch('/api/prompt-feedback', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        promptId: currentPromptId,
-        rating,
-        notes,
-      }),
-    });
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(generatedPrompt);
+    setSuccessMessage('Copied to clipboard!');
+    setTimeout(() => setSuccessMessage(''), 2000);
     
-    if (response.ok) {
-      setSuccessMessage('Thanks! Your feedback helps improve future prompts.');
-      setTimeout(() => setSuccessMessage(''), 3000);
+    // Trigger feedback prompt after a short delay
+    if (currentPromptId) {
+      setPendingFeedbackPrompt(generatedPrompt);
+      setTimeout(() => {
+        setShowFeedback(true);
+      }, 1500);
     }
-  } catch (error) {
-    console.error('Feedback submission error:', error);
-  }
-  
-  setShowFeedback(false);
-  setCurrentPromptId(null);
-};
+  };
 
-const handleFeedbackLater = () => {
-  setShowFeedback(false);
-  // Keep currentPromptId so we could show reminder later
-};
-
-const handleFeedbackDismiss = () => {
-  setShowFeedback(false);
-  setCurrentPromptId(null);
-};
-
-    return;
-    }
-
-    setIsSubmittingFeedback(true);
-
+  // ============================================
+  // FEEDBACK HANDLERS
+  // ============================================
+  const handleFeedbackSubmit = async (rating: string, notes: string) => {
+    if (!currentPromptId) return;
+    
     try {
-      const response = await fetch('/api/feedback', {
+      const response = await fetch('/api/prompt-feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           promptId: currentPromptId,
-          rating: rating,
+          rating,
+          notes,
         }),
       });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to submit feedback');
-      }
-
-      setFeedbackSubmitted(true);
-      setShowFeedbackUI(false);
       
-      // Show thank you message
-      const messages: Record<string, string> = {
-        'great': '🎯 Thanks! Continuum will remember what works.',
-        'good': '👍 Got it. Refining the patterns.',
-        'bad': '📝 Noted. Will adjust for next time.'
-      };
-      setSuccessMessage(messages[rating]);
-      setTimeout(() => setSuccessMessage(''), 3000);
-
-    } catch (error: any) {
-      console.error('Feedback error:', error);
-      setError(error.message || 'Failed to submit feedback');
-    } finally {
-      setIsSubmittingFeedback(false);
+      if (response.ok) {
+        setSuccessMessage('Thanks! Your feedback helps improve future prompts.');
+        setTimeout(() => setSuccessMessage(''), 3000);
+      }
+    } catch (error) {
+      console.error('Feedback submission error:', error);
     }
+    
+    setShowFeedback(false);
+    setCurrentPromptId(null);
+  };
+
+  const handleFeedbackLater = () => {
+    setShowFeedback(false);
+  };
+
+  const handleFeedbackDismiss = () => {
+    setShowFeedback(false);
+    setCurrentPromptId(null);
   };
 
   const formatTime = (seconds: number) => {
@@ -488,13 +424,13 @@ const handleFeedbackDismiss = () => {
           >
             Brands
           </a>
-            <a 
+          <a 
             href="/guide" 
             className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
             style={{ fontFamily: 'JetBrains Mono, monospace' }}
           >
             Guide
-        </a>
+          </a>
           <a 
             href="/about" 
             className="text-gray-400 hover:text-[#00FF87] text-sm transition-colors"
@@ -507,7 +443,7 @@ const handleFeedbackDismiss = () => {
       </header>
 
       {/* Main Content - with top padding for fixed header */}
-      <div className="max-width-6xl mx-auto p-8 pt-24">
+      <div className="max-w-6xl mx-auto p-8 pt-24">
 
         {/* Credits & Timer */}
         <div className="bg-gray-900 border border-gray-700 rounded p-6 mb-8 flex justify-between items-center">
@@ -782,71 +718,15 @@ const handleFeedbackDismiss = () => {
                   {generatedPrompt}
                 </p>
               </div>
-              
-              {/* ============================================ */}
-              {/* FEEDBACK UI (RESTORED) */}
-              {/* ============================================ */}
-              {showFeedbackUI && !feedbackSubmitted && (
-                <div className="mt-4 bg-yellow-900/20 border border-yellow-500/50 p-4 rounded">
-                  <p className="text-yellow-400 text-sm font-semibold mb-3" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
-                    🧠 How did the result turn out?
-                  </p>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => handleFeedback('great')}
-                      disabled={isSubmittingFeedback}
-                      className="flex-1 py-2 px-4 rounded bg-green-600 hover:bg-green-500 text-white font-bold text-sm transition-colors disabled:opacity-50"
-                      style={{ fontFamily: 'JetBrains Mono, monospace' }}
-                    >
-                      🎯 GREAT
-                    </button>
-                    <button
-                      onClick={() => handleFeedback('good')}
-                      disabled={isSubmittingFeedback}
-                      className="flex-1 py-2 px-4 rounded bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-colors disabled:opacity-50"
-                      style={{ fontFamily: 'JetBrains Mono, monospace' }}
-                    >
-                      👍 GOOD
-                    </button>
-                    <button
-                      onClick={() => handleFeedback('bad')}
-                      disabled={isSubmittingFeedback}
-                      className="flex-1 py-2 px-4 rounded bg-red-600 hover:bg-red-500 text-white font-bold text-sm transition-colors disabled:opacity-50"
-                      style={{ fontFamily: 'JetBrains Mono, monospace' }}
-                    >
-                      👎 BAD
-                    </button>
-                  </div>
-                  <p className="text-gray-500 text-xs mt-2 italic">
-                    Your feedback teaches Continuum what works for this brand
-                  </p>
-                </div>
-              )}
-              
-              {/* Feedback submitted confirmation */}
-              {feedbackSubmitted && (
-                <div className="mt-4 bg-[#00FF87]/10 border border-[#00FF87]/30 p-3 rounded">
-                  <p className="text-[#00FF87] text-sm">
-                    ✓ Feedback recorded. Continuum is learning.
-                  </p>
-                </div>
-              )}
-              
-              {/* Default learning message (when no feedback UI shown) */}
-              {!showFeedbackUI && !feedbackSubmitted && (
-                <div className="mt-4 bg-[#00FF87]/10 border border-[#00FF87]/30 p-3 rounded">
-                  <p className="text-[#00FF87] text-sm">
-                    ✓ Agent learning activated. Copy prompt and rate results to make future prompts smarter.
-                  </p>
-                </div>
-              )}
+              <div className="mt-4 bg-[#00FF87]/10 border border-[#00FF87]/30 p-3 rounded">
+                <p className="text-[#00FF87] text-sm">
+                  ✓ Agent learning activated. Copy prompt and rate results to make future prompts smarter.
+                </p>
+              </div>
             </div>
           )}
 
         </div>
-
-      </div>
-  </div>
 
       </div>
 
@@ -861,10 +741,6 @@ const handleFeedbackDismiss = () => {
           onDismiss={handleFeedbackDismiss}
         />
       )}
-    </div>
-  );
-}
-
     </div>
   );
 }
