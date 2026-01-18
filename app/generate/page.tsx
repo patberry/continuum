@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { UserButton } from '@clerk/nextjs';
+import FeedbackPrompt from './components/FeedbackPrompt';
+
 
 // Platform configuration with character limits
 const PLATFORMS = [
@@ -45,6 +47,10 @@ export default function GeneratePage() {
   const [platformRecommendations, setPlatformRecommendations] = useState<any[]>([]);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [currentPromptId, setCurrentPromptId] = useState<string | null>(null);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [pendingFeedbackPrompt, setPendingFeedbackPrompt] = useState<string>('');
+
   
   // ============================================
   // FEEDBACK SYSTEM STATE (RESTORED)
@@ -243,6 +249,9 @@ export default function GeneratePage() {
       const data = await response.json();
       setGeneratedPrompt(data.prompt);
       setLastGeneratedPrompt(data.prompt);
+      setCurrentPromptId(data.promptId);  // <-- ADD THIS LINE
+      setCredits(prev => prev !== null ? prev - 10 : prev);
+      setSuccessMessage('Prompt generated! (10 tokens)');
       
       // ============================================
       // CAPTURE PROMPT ID FOR FEEDBACK (CRITICAL)
@@ -315,17 +324,19 @@ export default function GeneratePage() {
   // ============================================
   // COPY TO CLIPBOARD - TRIGGERS FEEDBACK UI
   // ============================================
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(generatedPrompt);
-    setSuccessMessage('Copied to clipboard!');
-    
-    // Show feedback UI after copy if we have a promptId and haven't submitted yet
-    if (currentPromptId && !feedbackSubmitted) {
-      setShowFeedbackUI(true);
-    }
-    
-    setTimeout(() => setSuccessMessage(''), 2000);
-  };
+const copyToClipboard = () => {
+  navigator.clipboard.writeText(generatedPrompt);
+  setSuccessMessage('Copied to clipboard!');
+  setTimeout(() => setSuccessMessage(''), 2000);
+  
+  // Trigger feedback prompt after a short delay
+  if (currentPromptId) {
+    setPendingFeedbackPrompt(generatedPrompt);
+    setTimeout(() => {
+      setShowFeedback(true);
+    }, 1500);
+  }
+};
 
   // ============================================
   // FEEDBACK SUBMISSION HANDLER (RESTORED)
@@ -334,7 +345,44 @@ export default function GeneratePage() {
     if (!currentPromptId) {
       console.error('No promptId available for feedback');
       setError('Unable to submit feedback - no prompt ID');
-      return;
+  
+const handleFeedbackSubmit = async (rating: string, notes: string) => {
+  if (!currentPromptId) return;
+  
+  try {
+    const response = await fetch('/api/prompt-feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        promptId: currentPromptId,
+        rating,
+        notes,
+      }),
+    });
+    
+    if (response.ok) {
+      setSuccessMessage('Thanks! Your feedback helps improve future prompts.');
+      setTimeout(() => setSuccessMessage(''), 3000);
+    }
+  } catch (error) {
+    console.error('Feedback submission error:', error);
+  }
+  
+  setShowFeedback(false);
+  setCurrentPromptId(null);
+};
+
+const handleFeedbackLater = () => {
+  setShowFeedback(false);
+  // Keep currentPromptId so we could show reminder later
+};
+
+const handleFeedbackDismiss = () => {
+  setShowFeedback(false);
+  setCurrentPromptId(null);
+};
+
+    return;
     }
 
     setIsSubmittingFeedback(true);
@@ -798,6 +846,25 @@ export default function GeneratePage() {
         </div>
 
       </div>
+  </div>
+
+      </div>
+
+      {/* Feedback Modal */}
+      {showFeedback && currentPromptId && (
+        <FeedbackPrompt
+          promptId={currentPromptId}
+          promptPreview={pendingFeedbackPrompt}
+          platform={selectedPlatform}
+          onSubmit={handleFeedbackSubmit}
+          onLater={handleFeedbackLater}
+          onDismiss={handleFeedbackDismiss}
+        />
+      )}
+    </div>
+  );
+}
+
     </div>
   );
 }
