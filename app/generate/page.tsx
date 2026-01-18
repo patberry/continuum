@@ -23,12 +23,26 @@ const PLATFORMS = [
 
 const CLIP_DURATIONS = [
   { value: '3', label: '3 seconds (social cutdown)' },
+  { value: '4', label: '4 seconds' },
   { value: '5', label: '5 seconds (bumper/teaser)' },
+  { value: '6', label: '6 seconds' },
   { value: '7', label: '7 seconds (standard commercial shot)' },
+  { value: '8', label: '8 seconds' },
+  { value: '9', label: '9 seconds' },
   { value: '10', label: '10 seconds (extended shot)' },
+  { value: '11', label: '11 seconds' },
+  { value: '12', label: '12 seconds' },
+  { value: '13', label: '13 seconds' },
+  { value: '14', label: '14 seconds' },
   { value: '15', label: '15 seconds (hero sequence)' },
+  { value: '16', label: '16 seconds' },
+  { value: '17', label: '17 seconds' },
+  { value: '18', label: '18 seconds' },
+  { value: '19', label: '19 seconds' },
+  { value: '20', label: '20 seconds' },
+  { value: '25', label: '25 seconds' },
+  { value: '30', label: '30 seconds' },
 ];
-
 export default function GeneratePage() {
   // Core State
   const [brands, setBrands] = useState<any[]>([]);
@@ -443,7 +457,7 @@ export default function GeneratePage() {
       </header>
 
       {/* Main Content - with top padding for fixed header */}
-      <div className="max-w-6xl mx-auto p-8 pt-24">
+      <div className="max-w-4xl mx-auto p-8 pt-24">
 
         {/* Credits & Timer */}
         <div className="bg-gray-900 border border-gray-700 rounded p-6 mb-8 flex justify-between items-center">

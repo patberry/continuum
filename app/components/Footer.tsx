@@ -1,22 +1,10 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
-import { useAuth } from '@clerk/nextjs';
 import Link from 'next/link';
 
-// Routes where sidebar appears (authenticated app pages)
-const APP_ROUTES = ['/generate', '/dashboard', '/feedback'];
-
 export default function Footer() {
-  const pathname = usePathname();
-  const { isSignedIn, isLoaded } = useAuth();
-  
-  // Check if sidebar is visible on this page
-  const isAppPage = APP_ROUTES.some(route => pathname.startsWith(route));
-  const sidebarVisible = isLoaded && isSignedIn && isAppPage;
-
   return (
-    <footer className={`bg-gray-900 border-t border-gray-800 py-12 px-8 transition-all duration-300 ${sidebarVisible ? 'ml-16' : ''}`}>
+    <footer className="relative z-50 bg-gray-900 border-t border-gray-800 py-12 px-8">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           
